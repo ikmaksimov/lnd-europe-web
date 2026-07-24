@@ -1,0 +1,159 @@
+@import 'tailwindcss';
+
+/*
+  Trencadis design tokens.
+  --------------------------------------------------------------------------
+  Semantic tokens live here as CSS variables. Blocks only ever reference the
+  Tailwind utilities generated from them (bg-primary, text-muted, border-border,
+  rounded-token, font-display...). Re-theming a client site = editing the values
+  in :root below; every block re-colors with zero code changes.
+
+  Default theme is intentionally MONOCHROME: a near-black primary on a light,
+  warm-neutral (stone) surface, no colour accent. The showcase sells the
+  structure of the blocks, not a palette — each client site repaints via tokens.
+*/
+
+/* trencadis:css:start — the Trencadís token layer + custom utilities. The
+   `trencadis add` CLI prints everything between these markers to paste into a
+   target project's globals.css (after `@import 'tailwindcss';`). */
+:root {
+  /* Surfaces & text */
+  --background: #ffffff; /* page background */
+  --surface: #fafaf9; /* raised bands / card fills */
+  --foreground: #1c1917; /* primary text */
+  --muted: #78716c; /* secondary / muted text */
+  --border: #e7e5e4; /* hairline borders */
+
+  /* Primary (monochrome dark) */
+  --primary: #1c1917;
+  --primary-foreground: #fafaf9;
+
+  /* Accent — neutral tone of the same grey scale in the default theme */
+  --accent: #f5f5f4;
+  --accent-foreground: #1c1917;
+
+  /* Decorative tints — background gradients / glows ONLY (never text/borders).
+     Calm warm neutrals in the default monochrome theme; a client theme sets its
+     own colours here and gradient backgrounds "bloom" with zero code changes. */
+  --tint-1: #f5f5f4;
+  --tint-2: #eeece9;
+  --tint-3: #e7e5e4;
+
+  /* Shape */
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-tint-1: var(--tint-1);
+  --color-tint-2: var(--tint-2);
+  --color-tint-3: var(--tint-3);
+
+  --radius-token: var(--radius);
+
+  /* Font roles are fed by next/font (see app/layout.tsx). */
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+  Decorative mesh gradient built entirely from the tint tokens — a soft,
+  theme-driven backdrop blocks apply with one class (`bg-mesh`) and no hardcoded
+  colours. Editing --tint-1/2/3 in :root recolours it with zero code changes.
+  Defining it here (rather than inline in a block) also keeps the tint tokens
+  referenced by real CSS so they survive tree-shaking.
+*/
+@utility bg-mesh {
+  background-color: var(--surface);
+  background-image:
+    radial-gradient(at 15% 20%, var(--tint-1) 0px, transparent 50%),
+    radial-gradient(at 85% 12%, var(--tint-2) 0px, transparent 45%),
+    radial-gradient(at 50% 88%, var(--tint-3) 0px, transparent 55%);
+}
+
+/*
+  Marquee — a seamless, ambient horizontal scroll for image strips (gallery-01).
+  A track holds the image sequence plus an aria-hidden duplicate and translates
+  by -50% (exactly one copy) for a loop with no jump. The block sets duration and
+  direction inline and pauses a single row via `group-hover`; blocks that opt out
+  (animationLevel="none") simply omit the `animate-marquee` class.
+
+  The reduced-motion rule in @layer base sets animation-duration ~0 and
+  iteration-count 1 with !important, which override the values below — so rows go
+  static for visitors who ask for reduced motion.
+*/
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 45s;
+}
+/* trencadis:css:end */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Display font for headings by default; blocks can still override. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+
+  /* Visible keyboard focus everywhere (accessibility baseline). */
+  :focus-visible {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 2px;
+  }
+
+  /* Respect reduced-motion at the CSS level too (JS presets self-guard). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* The universal selector does not match ::details-content, so cover it
+       explicitly. MUST stay a separate rule: grouping it into the selector
+       list above would invalidate the whole list in browsers that don't
+       support ::details-content, silently disabling reduced-motion there. */
+    ::details-content {
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
