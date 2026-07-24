@@ -1,0 +1,23 @@
+{
+  "id": "statement-01",
+  "category": "statement",
+  "name": "Statement — scroll-tinted manifesto",
+  "description": "Large centered statement paragraph; words tint progressively as you scroll (textScrub, position-bound, reversible). Not a page heading — a brand manifesto.",
+  "bestFor": [
+    "brand manifestos",
+    "positioning",
+    "section transitions"
+  ],
+  "contentSlots": {
+    "eyebrow": "short overline label, optional",
+    "text": "statement of 40–60 words, 3–7 lines"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "textScrub"
+    ]
+  },
+  "sourcePattern": "sxsw.com: scroll-tinted statement",
+  "status": "stable"
+}

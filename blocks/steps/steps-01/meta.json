@@ -1,0 +1,25 @@
+{
+  "id": "steps-01",
+  "category": "steps",
+  "name": "Steps — numbered process",
+  "description": "A 'how it works' process as an ordered list: a number badge, title, description and an optional image per step. Semantic <ol> (numbers come from the index; badges are aria-hidden). Cards cascade in left-to-right. 1/2/4 columns at mobile/md/lg.",
+  "bestFor": [
+    "how it works",
+    "onboarding",
+    "process overview"
+  ],
+  "contentSlots": {
+    "heading": "section heading",
+    "subheading": "one sentence under the heading, optional",
+    "steps": "3–4 steps: title + description + image? {src, alt, width?, height?} (number comes from the index)"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeIn",
+      "staggerChildren"
+    ]
+  },
+  "sourcePattern": "recraft.ai: numbered how-to steps",
+  "status": "stable"
+}

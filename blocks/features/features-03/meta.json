@@ -1,0 +1,25 @@
+{
+  "id": "features-03",
+  "category": "features",
+  "name": "Features — icon list",
+  "description": "Lean borderless list: a large icon on the left, title and description on the right. No cards, no dividers. Item titles link when a href is given. 1/2/3 columns at mobile/md/lg.",
+  "bestFor": [
+    "service list",
+    "capabilities overview",
+    "what's included"
+  ],
+  "contentSlots": {
+    "heading": "section heading",
+    "subheading": "one sentence under the heading, optional",
+    "items": "4–6 items: icon? (overridable, ~40px) + title + description + href?"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeIn",
+      "staggerChildren"
+    ]
+  },
+  "sourcePattern": "recraft.ai: borderless icon list",
+  "status": "stable"
+}

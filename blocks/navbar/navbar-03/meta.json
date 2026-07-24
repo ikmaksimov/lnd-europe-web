@@ -1,0 +1,23 @@
+{
+  "id": "navbar-03",
+  "category": "navbar",
+  "name": "Navbar — mega menu",
+  "description": "Sticky header with mega-menu panels: on lg+ panel entries open rich dropdowns (link groups with descriptions plus an optional featured card); below lg the burger opens a fullscreen overlay with the same content as an accordion and a sticky bottom CTA. Click to open (not hover), one panel at a time, Escape closes and restores focus, outside click closes; the plus rotates into a cross in CSS. React state + CSS only, no GSAP.",
+  "bestFor": [
+    "multi-section sites",
+    "service catalogues",
+    "content-rich navigation"
+  ],
+  "contentSlots": {
+    "logo": "brand label + href (mark overridable)",
+    "items": "nav entries: plain { label, href } or { label, panel: { groups[], featured? } }",
+    "secondaryLink": "quiet link before the CTA, optional",
+    "cta": "primary action (pill)"
+  },
+  "animation": {
+    "level": "none",
+    "presets": []
+  },
+  "sourcePattern": "nory.co: mega menu navigation",
+  "status": "stable"
+}

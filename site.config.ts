@@ -15,14 +15,14 @@ export const siteConfig = {
   description:
     'A fast, accessible website assembled from Trencadís blocks. Edit this description in site.config.ts.',
   /** Absolute base URL. Used for metadataBase, canonical URLs, sitemap, OG. */
-  url: 'https://example.com',
+  url: 'https://lndeurope.com',
   /** BCP-47 locale for <html lang> and og:locale. */
   locale: 'en',
   ogLocale: 'en_US',
   /** Site owner — surfaced in Organization JSON-LD. */
   organization: {
-    name: 'Your Company',
-    url: 'https://example.com',
+    name: 'LND Europe',
+    url: 'https://lndeurope.com',
   },
   /**
    * Smooth scrolling (Lenis). Toggling this flag mounts/unmounts the provider

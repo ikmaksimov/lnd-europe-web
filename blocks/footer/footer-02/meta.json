@@ -1,0 +1,31 @@
+{
+  "id": "footer-02",
+  "category": "footer",
+  "name": "Footer — editorial statement",
+  "description": "Inverted footer that reads like a manifesto: small brand line, a huge two-style statement (italic lead + bold uppercase display), a short paragraph, large uppercase nav links with ↗ arrows, an optional featured card (lg+ only) and a legal strip with the studio credit. The statement is a <p>; an sr-only h2 names the landmark. Gentle fadeIn + stagger entrance.",
+  "bestFor": [
+    "brand-led site endings",
+    "editorial / portfolio sites",
+    "manifesto footer"
+  ],
+  "contentSlots": {
+    "brand": "small brand line above the statement",
+    "statementLead": "first half of the statement (italic, light)",
+    "statement": "second half (bold uppercase display)",
+    "body": "1–2 sentences under the statement, optional",
+    "links": "nav links: label + href (uppercase, with ↗)",
+    "featured": "card: label? + image {src, alt} + title + href + linkLabel? (lg+ only)",
+    "copyright": "copyright line",
+    "legalLinks": "small legal links",
+    "credit": "studio credit { label, href } — defaults to DigitalForms"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeIn",
+      "staggerChildren"
+    ]
+  },
+  "sourcePattern": "dominique-sire site: editorial statement footer",
+  "status": "stable"
+}

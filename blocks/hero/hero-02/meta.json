@@ -1,0 +1,32 @@
+{
+  "id": "hero-02",
+  "category": "hero",
+  "name": "Hero — full-bleed background",
+  "description": "A full-viewport hero with a background photo, a text column overlaid upper-left, and a reassurance strip pinned to the bottom. The go-to first screen for product and premium landings.",
+  "bestFor": [
+    "product landing pages",
+    "premium brands",
+    "hospitality & real estate"
+  ],
+  "contentSlots": {
+    "eyebrow": "short overline label, optional",
+    "badge": "tiny pill next to the eyebrow, optional",
+    "title": "main heading, 3–6 words",
+    "subtitle": "1–2 sentences",
+    "primaryCta": "action button",
+    "secondaryCta": "secondary link, optional",
+    "background": "wide photo, ~2400px, the LCP",
+    "items": "3 reassurance points, icon + short uppercase label"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeUp",
+      "fadeIn",
+      "textReveal",
+      "parallaxImage"
+    ]
+  },
+  "sourcePattern": "remarkable.com: full-bleed background hero",
+  "status": "stable"
+}
