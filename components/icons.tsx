@@ -99,6 +99,36 @@ export function ClockIcon(props: IconProps) {
   );
 }
 
+export function PackageIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+      <path d="m3.3 7 8.7 5 8.7-5" />
+      <path d="M12 22V12" />
+    </Icon>
+  );
+}
+
+export function FactoryIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+      <path d="M7 18h1M12 18h1M17 18h1" />
+    </Icon>
+  );
+}
+
+export function RocketIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91 0Z" />
+      <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2Z" />
+      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+    </Icon>
+  );
+}
+
 export function CpuIcon(props: IconProps) {
   return (
     <Icon {...props}>

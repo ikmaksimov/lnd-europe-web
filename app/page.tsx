@@ -5,15 +5,19 @@ import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
 import { Hero02 } from '@/blocks/hero/hero-02/hero-02';
 import { Statement01 } from '@/blocks/statement/statement-01/statement-01';
 import { Features03 } from '@/blocks/features/features-03/features-03';
+import { Features01 } from '@/blocks/features/features-01/features-01';
 import { Steps01 } from '@/blocks/steps/steps-01/steps-01';
 import { Cta02 } from '@/blocks/cta/cta-02/cta-02';
 import { Footer02 } from '@/blocks/footer/footer-02/footer-02';
 import {
   ClockIcon,
   CpuIcon,
+  FactoryIcon,
   GlobeIcon,
   LandmarkIcon,
   LinkIcon,
+  PackageIcon,
+  RocketIcon,
   TargetIcon,
   TentIcon,
   TrendingUpIcon,
@@ -138,6 +142,48 @@ const PROCESS = [
   },
 ];
 
+/** The seven audiences from the copy deck, condensed to a 3×2 grid: the two
+ *  public-sector entries (IPAs, governments and economic development agencies)
+ *  share a card, since the engagement is the same. */
+const INDUSTRIES = [
+  {
+    title: 'International Exhibition Organizers',
+    description:
+      'Fill your floor with relevant exhibitors and buyers, backed by 10+ years in the exhibition industry.',
+    icon: <TentIcon size={22} />,
+  },
+  {
+    title: 'IPAs & Economic Development Agencies',
+    description:
+      'Reach the investors and companies your region is built to attract, market by market.',
+    icon: <LandmarkIcon size={22} />,
+  },
+  {
+    title: 'Trade Promotion Organizations',
+    description:
+      'Connect national exporters with verified buyers and partners across Europe.',
+    icon: <PackageIcon size={22} />,
+  },
+  {
+    title: 'B2B Technology Companies',
+    description:
+      'Enter new European markets with a prioritized map of the accounts that matter.',
+    icon: <CpuIcon size={22} />,
+  },
+  {
+    title: 'Manufacturers & Exporters',
+    description:
+      'Find distributors, buyers and partners well beyond your home market.',
+    icon: <FactoryIcon size={22} />,
+  },
+  {
+    title: 'International Scale-ups',
+    description:
+      'Turn intelligence into qualified, multilingual pipeline as you expand across Europe.',
+    icon: <RocketIcon size={22} />,
+  },
+];
+
 const FOOTER_LINKS = [
   { label: 'About', href: '#why' },
   { label: 'Solutions', href: '#solutions' },
@@ -196,6 +242,15 @@ export default function Home() {
             heading="How it works"
             subheading="Four steps from market intelligence to a qualified pipeline."
             steps={PROCESS}
+          />
+        </div>
+
+        <div id="industries" className="scroll-mt-16">
+          <Features01
+            eyebrow="Industries we serve"
+            heading="Who we build for"
+            subheading="Organizations whose growth depends on reaching the right companies across Europe."
+            items={INDUSTRIES}
           />
         </div>
 
