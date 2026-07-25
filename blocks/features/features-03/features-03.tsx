@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, type ReactNode } from 'react';
+import { useId, useRef, type ReactNode } from 'react';
 import Link from 'next/link';
 import type { BlockBaseProps } from '@/lib/animations/types';
 import { useBlockAnimation } from '@/lib/animations/use-block-animation';
@@ -17,6 +17,9 @@ export interface Features03Props extends BlockBaseProps {
   heading?: string;
   subheading?: string;
   items?: Feature03Item[];
+  /** Root for this instance's DOM ids. Defaults to a per-instance React id, so
+   *  the block can be used twice on a page. Technical, not content (BLOCK-SPEC §10). */
+  htmlId?: string;
 }
 
 const DEFAULT_ITEMS: Feature03Item[] = [
@@ -72,10 +75,13 @@ export function Features03({
   heading = 'Everything we look after',
   subheading = 'One local team, one clear standard, across the whole property.',
   items = DEFAULT_ITEMS,
+  htmlId,
   animationLevel = 'subtle',
 }: Features03Props) {
   const scope = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const autoId = useId();
+  const titleId = `${htmlId ?? autoId}-title`;
 
   useBlockAnimation(animationLevel, scope, (level) => {
     fadeIn(scope.current?.querySelector('[data-features3-head]'));
@@ -83,11 +89,11 @@ export function Features03({
   });
 
   return (
-    <section ref={scope} aria-labelledby="features-03-title" className="bg-background">
+    <section ref={scope} aria-labelledby={titleId} className="bg-background">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
         <div data-features3-head className="max-w-2xl">
           <h2
-            id="features-03-title"
+            id={titleId}
             className="font-display text-foreground text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
           >
             {heading}

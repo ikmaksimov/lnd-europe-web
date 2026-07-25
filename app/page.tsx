@@ -6,7 +6,6 @@ import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
 import { Hero02 } from '@/blocks/hero/hero-02/hero-02';
 import { Statement01 } from '@/blocks/statement/statement-01/statement-01';
 import { Features03 } from '@/blocks/features/features-03/features-03';
-import { Features01 } from '@/blocks/features/features-01/features-01';
 import { Steps01 } from '@/blocks/steps/steps-01/steps-01';
 import { Cta02 } from '@/blocks/cta/cta-02/cta-02';
 import { Footer02 } from '@/blocks/footer/footer-02/footer-02';
@@ -143,45 +142,45 @@ const PROCESS = [
   },
 ];
 
-/** The seven audiences from the copy deck, condensed to a 3×2 grid: the two
+/** The seven audiences from the copy deck, condensed to six: the two
  *  public-sector entries (IPAs, governments and economic development agencies)
- *  share a card, since the engagement is the same. */
+ *  share an entry, since the engagement is the same. */
 const INDUSTRIES = [
   {
     title: 'International Exhibition Organizers',
     description:
       'Fill your floor with relevant exhibitors and buyers, backed by 10+ years in the exhibition industry.',
-    icon: <TentIcon size={22} />,
+    icon: <TentIcon size={40} className="h-10 w-10" />,
   },
   {
     title: 'IPAs & Economic Development Agencies',
     description:
       'Reach the investors and companies your region is built to attract, market by market.',
-    icon: <LandmarkIcon size={22} />,
+    icon: <LandmarkIcon size={40} className="h-10 w-10" />,
   },
   {
     title: 'Trade Promotion Organizations',
     description:
       'Connect national exporters with verified buyers and partners across Europe.',
-    icon: <PackageIcon size={22} />,
+    icon: <PackageIcon size={40} className="h-10 w-10" />,
   },
   {
     title: 'B2B Technology Companies',
     description:
       'Enter new European markets with a prioritized map of the accounts that matter.',
-    icon: <CpuIcon size={22} />,
+    icon: <CpuIcon size={40} className="h-10 w-10" />,
   },
   {
     title: 'Manufacturers & Exporters',
     description:
       'Find distributors, buyers and partners well beyond your home market.',
-    icon: <FactoryIcon size={22} />,
+    icon: <FactoryIcon size={40} className="h-10 w-10" />,
   },
   {
     title: 'International Scale-ups',
     description:
       'Turn intelligence into qualified, multilingual pipeline as you expand across Europe.',
-    icon: <RocketIcon size={22} />,
+    icon: <RocketIcon size={40} className="h-10 w-10" />,
   },
 ];
 
@@ -247,6 +246,7 @@ export default function Home() {
 
         <div id="solutions" className="scroll-mt-16">
           <Features03
+            htmlId="solutions"
             heading="One integrated growth engine"
             subheading="AI, intelligence and data working as one system — from first signal to qualified pipeline."
             items={SOLUTIONS}
@@ -262,8 +262,8 @@ export default function Home() {
         </div>
 
         <div id="industries" className="scroll-mt-16">
-          <Features01
-            eyebrow="Industries we serve"
+          <Features03
+            htmlId="industries"
             heading="Who we build for"
             subheading="Organizations whose growth depends on reaching the right companies across Europe."
             items={INDUSTRIES}
