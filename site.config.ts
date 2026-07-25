@@ -9,11 +9,11 @@
  */
 export const siteConfig = {
   /** Brand name used in the <title> template and JSON-LD. */
-  name: 'LND Europe',
+  name: 'LND Tech Europe',
   /** Short tagline for metadata descriptions and Organization JSON-LD. */
-  tagline: 'A site built with Trencadís',
+  tagline: 'The AI infrastructure behind European B2B growth',
   description:
-    'A fast, accessible website assembled from Trencadís blocks. Edit this description in site.config.ts.',
+    'Proprietary AI powered by a living European Business Intelligence Engine — so you reach the companies that actually matter, in markets that change every day.',
   /** Absolute base URL. Used for metadataBase, canonical URLs, sitemap, OG. */
   url: 'https://lndeurope.com',
   /** BCP-47 locale for <html lang> and og:locale. */
@@ -21,7 +21,7 @@ export const siteConfig = {
   ogLocale: 'en_US',
   /** Site owner — surfaced in Organization JSON-LD. */
   organization: {
-    name: 'LND Europe',
+    name: 'LND Tech Europe',
     url: 'https://lndeurope.com',
   },
   /**
