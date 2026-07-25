@@ -123,6 +123,12 @@ const DEFAULT_ITEMS: NavEntry[] = [
  * Progressive enhancement: the panels and the overlay need JS (the same accepted
  * trade-off as navbar-01's mobile menu). Without JS the plain entries, the
  * secondary link and the CTA are still real anchors and fully usable.
+ *
+ * Label lengths: unlike navbar-01/02 the CTA stays visible on mobile, so the bar
+ * shares a narrow row with the logo. A short CTA label (≤ ~14 chars) reads best
+ * there; the logo label and the CTA both truncate on overflow (the burger and
+ * the overlay's close button never shrink), so longer labels degrade to an
+ * ellipsis instead of forcing the page to scroll horizontally.
  */
 export function Navbar03({
   logo = { label: 'Vora Mar', href: '/demo' },
@@ -199,14 +205,16 @@ export function Navbar03({
     >
       <nav
         aria-label="Primary"
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6"
+        className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:gap-4 sm:px-6"
       >
+        {/* min-w-0 + a truncating label: the logo yields space first, so long
+            brand names can never widen the header past the viewport. */}
         <Link
           href={logo.href}
-          className="text-foreground flex shrink-0 items-center gap-2 text-lg font-semibold tracking-tight"
+          className="text-foreground flex min-w-0 items-center gap-2 text-lg font-semibold tracking-tight"
         >
-          {logo.mark ?? <BrandMark />}
-          <span className="font-display">{logo.label}</span>
+          <span className="inline-flex shrink-0">{logo.mark ?? <BrandMark />}</span>
+          <span className="font-display truncate">{logo.label}</span>
         </Link>
 
         {/* Desktop entries */}
@@ -245,21 +253,22 @@ export function Navbar03({
           )}
         </ul>
 
-        {/* Right cluster */}
-        <div className="flex shrink-0 items-center gap-2">
+        {/* Right cluster — shrinkable (min-w-0), so a long CTA label can never
+            push the burger out of the viewport; the burger itself never shrinks. */}
+        <div className="flex min-w-0 items-center gap-2">
           {secondaryLink ? (
             <Link
               href={secondaryLink.href}
-              className="text-muted hover:text-foreground hidden px-3 py-2 text-sm transition-colors lg:inline-flex"
+              className="text-muted hover:text-foreground hidden px-3 py-2 text-sm whitespace-nowrap transition-colors lg:inline-flex"
             >
               {secondaryLink.label}
             </Link>
           ) : null}
           <Link
             href={cta.href}
-            className="bg-primary text-primary-foreground inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90"
+            className="bg-primary text-primary-foreground inline-flex min-w-0 max-w-[42vw] items-center justify-center rounded-full px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90 sm:max-w-none sm:px-4"
           >
-            {cta.label}
+            <span className="truncate">{cta.label}</span>
           </Link>
           <button
             ref={burgerRef}
@@ -268,7 +277,7 @@ export function Navbar03({
             aria-expanded={mobileOpen}
             aria-controls="navbar-03-overlay"
             onClick={() => setMobileOpen((v) => !v)}
-            className="text-foreground rounded-token inline-flex items-center justify-center p-2 lg:hidden"
+            className="text-foreground rounded-token inline-flex shrink-0 items-center justify-center p-2 lg:hidden"
           >
             <BurgerIcon />
           </button>
@@ -377,22 +386,22 @@ export function Navbar03({
           id="navbar-03-overlay"
           className="bg-background fixed inset-0 z-50 flex flex-col overflow-y-auto lg:hidden"
         >
-          <div className="border-border flex h-16 shrink-0 items-center justify-between gap-4 border-b px-4 sm:px-6">
+          <div className="border-border flex h-16 shrink-0 items-center justify-between gap-3 border-b px-4 sm:gap-4 sm:px-6">
             <Link
               href={logo.href}
               onClick={closeOverlay}
-              className="text-foreground flex items-center gap-2 text-lg font-semibold tracking-tight"
+              className="text-foreground flex min-w-0 items-center gap-2 text-lg font-semibold tracking-tight"
             >
-              {logo.mark ?? <BrandMark />}
-              <span className="font-display">{logo.label}</span>
+              <span className="inline-flex shrink-0">{logo.mark ?? <BrandMark />}</span>
+              <span className="font-display truncate">{logo.label}</span>
             </Link>
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <Link
                 href={cta.href}
                 onClick={closeOverlay}
-                className="bg-primary text-primary-foreground inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium"
+                className="bg-primary text-primary-foreground inline-flex min-w-0 max-w-[42vw] items-center justify-center rounded-full px-3 py-2 text-sm font-medium sm:max-w-none sm:px-4"
               >
-                {cta.label}
+                <span className="truncate">{cta.label}</span>
               </Link>
               <button
                 ref={closeRef}
@@ -402,7 +411,7 @@ export function Navbar03({
                   closeOverlay();
                   burgerRef.current?.focus();
                 }}
-                className="text-foreground rounded-token inline-flex items-center justify-center p-2"
+                className="text-foreground rounded-token inline-flex shrink-0 items-center justify-center p-2"
               >
                 <CloseIcon />
               </button>
