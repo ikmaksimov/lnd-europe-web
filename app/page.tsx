@@ -217,8 +217,9 @@ export default function Home() {
           subtitle="LND Tech Europe builds proprietary AI powered by a living European Business Intelligence Engine — so you reach the companies that actually matter, in markets that change every day."
           primaryCta={BOOK_A_CALL}
           secondaryCta={{ label: 'See what we build', href: '#solutions' }}
-          // Placeholder art: swap for the client's hero photo and describe it in alt.
-          background={{ src: '/placeholders/hero-wide.svg', alt: '' }}
+          // Decorative brand artwork; the h1 carries the meaning, so alt is empty
+          // and the image stays out of the accessibility tree.
+          background={{ src: '/hero.jpg', alt: '' }}
           items={HERO_STATS}
         />
 
