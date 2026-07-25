@@ -1,4 +1,5 @@
 import type { Organization, WithContext } from 'schema-dts';
+import Image from 'next/image';
 import { JsonLd } from '@/components/json-ld';
 import { siteConfig } from '@/site.config';
 import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
@@ -202,7 +203,21 @@ export default function Home() {
     <>
       <JsonLd data={organizationLd} />
       <Navbar03
-        logo={{ label: siteConfig.name, href: '/' }}
+        // The logo is a wordmark, so it replaces the text label rather than
+        // sitting next to it; its alt carries the link's accessible name.
+        logo={{
+          label: '',
+          href: '/',
+          mark: (
+            <Image
+              src="/logo.png"
+              alt={siteConfig.name}
+              width={67}
+              height={40}
+              priority
+            />
+          ),
+        }}
         items={NAV_ITEMS}
         secondaryLink={{ label: 'Contact', href: '#contact' }}
         cta={BOOK_A_CALL}
@@ -217,8 +232,8 @@ export default function Home() {
           subtitle="LND Tech Europe builds proprietary AI powered by a living European Business Intelligence Engine — so you reach the companies that actually matter, in markets that change every day."
           primaryCta={BOOK_A_CALL}
           secondaryCta={{ label: 'See what we build', href: '#solutions' }}
-          // Decorative brand artwork; the h1 carries the meaning, so alt is empty
-          // and the image stays out of the accessibility tree.
+          // Decorative backdrop; the h1 carries the meaning, so alt is empty and
+          // the image stays out of the accessibility tree.
           background={{ src: '/hero.jpg', alt: '' }}
           items={HERO_STATS}
         />
