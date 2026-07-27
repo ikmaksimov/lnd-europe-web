@@ -1,46 +1,30 @@
 @import 'tailwindcss';
+@import '../themes/neutral.css';
 
 /*
-  Trencadis design tokens.
+  Trencadís globals — MECHANICS ONLY.
   --------------------------------------------------------------------------
-  Semantic tokens live here as CSS variables. Blocks only ever reference the
-  Tailwind utilities generated from them (bg-primary, text-muted, border-border,
-  rounded-token, font-display...). Re-theming a client site = editing the values
-  in :root below; every block re-colors with zero code changes.
+  The palette lives in `themes/<name>.css` (imported above), which declares the
+  full token set twice: `:root` for light and `.theme-dark` for the scoped dark
+  variant. This file holds everything that does NOT change between themes — the
+  `@theme inline` mapping that turns tokens into Tailwind utilities, the custom
+  utilities blocks use, the layout contract, and the base layer.
 
-  Default theme is intentionally MONOCHROME: a near-black primary on a light,
-  warm-neutral (stone) surface, no colour accent. The showcase sells the
-  structure of the blocks, not a palette — each client site repaints via tokens.
+  Swapping a client's palette is therefore swapping ONE import line
+  (`trencadis theme add slate`), never editing block code.
 */
 
-/* trencadis:css:start — the Trencadís token layer + custom utilities. The
-   `trencadis add` CLI prints everything between these markers to paste into a
-   target project's globals.css (after `@import 'tailwindcss';`). */
+/* trencadis:css:start — the Trencadís MECHANICS layer. `trencadis add` prints
+   everything between these markers to paste into a target project's globals.css
+   (after `@import 'tailwindcss';`), and copies a theme file alongside it — the
+   two together are the working token layer: theme = values, this = mechanics. */
 :root {
-  /* Surfaces & text */
-  --background: #ffffff; /* page background */
-  --surface: #fafaf9; /* raised bands / card fills */
-  --foreground: #1c1917; /* primary text */
-  --muted: #78716c; /* secondary / muted text */
-  --border: #e7e5e4; /* hairline borders */
-
-  /* Primary (monochrome dark) */
-  --primary: #1c1917;
-  --primary-foreground: #fafaf9;
-
-  /* Accent — neutral tone of the same grey scale in the default theme */
-  --accent: #f5f5f4;
-  --accent-foreground: #1c1917;
-
-  /* Decorative tints — background gradients / glows ONLY (never text/borders).
-     Calm warm neutrals in the default monochrome theme; a client theme sets its
-     own colours here and gradient backgrounds "bloom" with zero code changes. */
-  --tint-1: #f5f5f4;
-  --tint-2: #eeece9;
-  --tint-3: #e7e5e4;
-
-  /* Shape */
-  --radius: 0.75rem;
+  /* Layout contract: the height of the site's STICKY header. Full-viewport
+     sections that sit under it (hero-02 `underHeader`) offset themselves by this
+     value, so the first screen fits exactly. Our headers are the bar height plus
+     a 1px bottom border: navbar-01 / navbar-03 = 65px, navbar-02 = 57px. Set it
+     once here to match whichever header the site uses. */
+  --header-height: 65px;
 }
 
 @theme inline {
@@ -49,12 +33,18 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
 
   --color-tint-1: var(--tint-1);
   --color-tint-2: var(--tint-2);
@@ -107,6 +97,48 @@
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-duration: 45s;
+}
+
+/*
+  Trencadís Effects — the CSS-only ones.
+  --------------------------------------------------------------------------
+  An effect that needs no JavaScript belongs here rather than in `lib/effects`
+  (docs/EFFECTS.md). Both of these collapse automatically under the
+  reduced-motion rule in @layer base, which zeroes transition/animation
+  durations — so neither needs its own media query.
+*/
+
+/* underline-draw — a link underline that draws itself in on hover/focus. Uses
+   currentColor, so it follows the token colour of whatever text it is on. */
+@utility underline-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 300ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* The Typewriter's caret. Decorative and aria-hidden in the component. */
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@utility animate-caret {
+  animation-name: caret-blink;
+  animation-duration: 1s;
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: infinite;
 }
 /* trencadis:css:end */
 

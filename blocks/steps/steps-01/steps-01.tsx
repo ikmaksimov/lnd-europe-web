@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useId, useRef } from 'react';
 import Image from 'next/image';
 import type { BlockBaseProps } from '@/lib/animations/types';
 import { useBlockAnimation } from '@/lib/animations/use-block-animation';
@@ -16,6 +16,9 @@ export interface Steps01Props extends BlockBaseProps {
   heading?: string;
   subheading?: string;
   steps?: Step[];
+  /** Root for this instance's DOM ids. Defaults to a per-instance React id, so
+   *  the block can be used twice on a page. Technical, not content (BLOCK-SPEC §10). */
+  htmlId?: string;
 }
 
 const DEFAULT_STEPS: Step[] = [
@@ -76,10 +79,13 @@ export function Steps01({
   heading = 'How it works',
   subheading = 'Four calm steps from first visit to a home that looks after itself.',
   steps = DEFAULT_STEPS,
+  htmlId,
   animationLevel = 'subtle',
 }: Steps01Props) {
   const scope = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
+  const autoId = useId();
+  const titleId = `${htmlId ?? autoId}-title`;
 
   useBlockAnimation(animationLevel, scope, (level) => {
     fadeIn(scope.current?.querySelector('[data-steps-head]'));
@@ -87,11 +93,11 @@ export function Steps01({
   });
 
   return (
-    <section ref={scope} aria-labelledby="steps-01-title" className="bg-background">
+    <section ref={scope} aria-labelledby={titleId} className="bg-background">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
         <div data-steps-head className="max-w-2xl">
           <h2
-            id="steps-01-title"
+            id={titleId}
             className="font-display text-foreground text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
           >
             {heading}

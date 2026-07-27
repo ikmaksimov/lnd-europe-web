@@ -225,6 +225,12 @@ export default function Home() {
         <Hero02
           headingLevel="h1"
           imagePriority
+          // The photo is dark almost everywhere, so the section runs on the dark
+          // token set and the type inverts with the scrim.
+          tone="dark"
+          // navbar-03 above is sticky, so the hero pulls up under it and pads the
+          // content back down by --header-height.
+          underHeader
           badge="10+ years in European B2B"
           eyebrow="AI growth intelligence · Europe"
           title="The AI infrastructure behind European B2B growth."

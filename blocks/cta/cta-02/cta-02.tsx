@@ -1,10 +1,11 @@
 'use client';
 
-import { useRef, type ReactNode } from 'react';
+import { useId, useRef, type ReactNode } from 'react';
 import Link from 'next/link';
 import type { BlockBaseProps } from '@/lib/animations/types';
 import { useBlockAnimation } from '@/lib/animations/use-block-animation';
 import { fadeIn, textReveal } from '@/lib/animations/presets';
+import { BrandMark } from '@/lib/icons';
 
 interface Cta {
   label: string;
@@ -25,6 +26,9 @@ export interface Cta02Props extends BlockBaseProps {
   background?: 'gradient' | 'plain';
   /** Fill the viewport (min-h-svh, vertically centered) instead of using padding. */
   fullHeight?: boolean;
+  /** Root for this instance's DOM ids. Defaults to a per-instance React id, so
+   *  the block can be used twice on a page. Technical, not content (BLOCK-SPEC §10). */
+  htmlId?: string;
 }
 
 /** Default editable content — single source of truth for props and the Page
@@ -54,9 +58,15 @@ export function Cta02({
   headingLevel = 'h2',
   background = defaults.background,
   fullHeight = defaults.fullHeight,
+  htmlId,
   animationLevel = 'subtle',
 }: Cta02Props) {
   const scope = useRef<HTMLElement>(null);
+  // The heading is targeted by ref, not by an id selector: instance ids come from
+  // useId and are not guaranteed to be valid CSS selectors.
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const autoId = useId();
+  const titleId = `${htmlId ?? autoId}-title`;
   const Heading = headingLevel;
 
   useBlockAnimation(animationLevel, scope, (level) => {
@@ -64,9 +74,9 @@ export function Cta02({
     if (!root) return;
     fadeIn(root.querySelector('[data-cta2-icon]'));
     if (level === 'rich') {
-      textReveal(root.querySelector('#cta-02-title'), { type: 'lines' });
+      textReveal(titleRef.current, { type: 'lines' });
     } else {
-      fadeIn(root.querySelector('#cta-02-title'), { delay: 0.1 });
+      fadeIn(titleRef.current, { delay: 0.1 });
     }
     fadeIn(root.querySelector('[data-cta2-sub]'), { delay: 0.2 });
     fadeIn(root.querySelector('[data-cta2-cta]'), { delay: 0.3 });
@@ -75,7 +85,7 @@ export function Cta02({
   return (
     <section
       ref={scope}
-      aria-labelledby="cta-02-title"
+      aria-labelledby={titleId}
       className={background === 'gradient' ? 'bg-mesh' : 'bg-surface'}
     >
       <div
@@ -89,11 +99,12 @@ export function Cta02({
           aria-hidden="true"
           className="rounded-token border-border bg-background text-foreground mb-8 inline-flex h-16 w-16 items-center justify-center border shadow-sm"
         >
-          {icon ?? <BrandMark />}
+          {icon ?? <BrandMark size={26} className="text-foreground" />}
         </span>
 
         <Heading
-          id="cta-02-title"
+          id={titleId}
+          ref={titleRef}
           className="font-display text-foreground text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl"
         >
           {title}
@@ -119,48 +130,12 @@ export function Cta02({
         <div data-cta2-cta className="mt-8">
           <Link
             href={primaryCta.href}
-            className="border-border bg-background text-foreground hover:bg-surface inline-flex items-center justify-center rounded-full border px-7 py-3 text-base font-medium shadow-sm transition-colors"
+            className="border-border bg-background text-foreground hover:bg-accent inline-flex items-center justify-center rounded-full border px-7 py-3 text-base font-medium shadow-sm transition-colors"
           >
             {primaryCta.label}
           </Link>
         </div>
       </div>
     </section>
-  );
-}
-
-/* --- Inline icon (Lucide-style tile mark, ISC) — currentColor, per BLOCK-SPEC §7 --- */
-
-function BrandMark() {
-  return (
-    <svg
-      width="26"
-      height="26"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className="text-foreground"
-    >
-      <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
-      <rect
-        x="14"
-        y="3"
-        width="7"
-        height="7"
-        rx="1.5"
-        fill="currentColor"
-        opacity="0.55"
-      />
-      <rect
-        x="3"
-        y="14"
-        width="7"
-        height="7"
-        rx="1.5"
-        fill="currentColor"
-        opacity="0.55"
-      />
-      <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" />
-    </svg>
   );
 }

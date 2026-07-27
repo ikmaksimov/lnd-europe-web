@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { BlockBaseProps } from '@/lib/animations/types';
+import { ArrowCircleRight, BrandMark, List, Plus, X } from '@/lib/icons';
 
 interface MegaLink {
   label: string;
@@ -34,6 +35,9 @@ export interface Navbar03Props extends BlockBaseProps {
   items?: NavEntry[];
   secondaryLink?: { label: string; href: string };
   cta?: { label: string; href: string };
+  /** Root for this instance's DOM ids. Defaults to a per-instance React id, so
+   *  the block can be used twice on a page. Technical, not content (BLOCK-SPEC §10). */
+  htmlId?: string;
 }
 
 /** Panel entries render as buttons; plain entries as links. */
@@ -41,11 +45,6 @@ function hasPanel(
   entry: NavEntry
 ): entry is { label: string; panel: { groups: MegaGroup[]; featured?: MegaFeatured } } {
   return 'panel' in entry;
-}
-
-/** Deterministic id from the entry label (SSR-safe). */
-function panelId(label: string): string {
-  return `navbar-03-panel-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 }
 
 const DEFAULT_ITEMS: NavEntry[] = [
@@ -135,10 +134,18 @@ export function Navbar03({
   items = DEFAULT_ITEMS,
   secondaryLink = { label: 'Owner login', href: '#' },
   cta = { label: 'Request a visit', href: '/demo#contact' },
+  htmlId,
 }: Navbar03Props) {
   const [openPanel, setOpenPanel] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  // Ids are instance-scoped (two navbars can share a page) and derived from the
+  // entry's index, not its label — two entries may legitimately share a label.
+  const autoId = useId();
+  const baseId = htmlId ?? autoId;
+  const overlayId = `${baseId}-overlay`;
+  const panelId = (index: number) => `${baseId}-panel-${index}`;
 
   const headerRef = useRef<HTMLElement>(null);
   const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -199,182 +206,189 @@ export function Navbar03({
 
   return (
     <>
-    <header
-      ref={headerRef}
-      className="border-border bg-background/85 sticky top-0 z-50 border-b backdrop-blur"
-    >
-      <nav
-        aria-label="Primary"
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:gap-4 sm:px-6"
+      <header
+        ref={headerRef}
+        className="border-border bg-background/85 sticky top-0 z-50 border-b backdrop-blur"
       >
-        {/* min-w-0 + a truncating label: the logo yields space first, so long
-            brand names can never widen the header past the viewport. */}
-        <Link
-          href={logo.href}
-          className="text-foreground flex min-w-0 items-center gap-2 text-lg font-semibold tracking-tight"
+        <nav
+          aria-label="Primary"
+          className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:gap-4 sm:px-6"
         >
-          <span className="inline-flex shrink-0">{logo.mark ?? <BrandMark />}</span>
-          <span className="font-display truncate">{logo.label}</span>
-        </Link>
-
-        {/* Desktop entries */}
-        <ul className="hidden items-center gap-1 lg:flex">
-          {items.map((entry) =>
-            hasPanel(entry) ? (
-              <li key={entry.label}>
-                <button
-                  type="button"
-                  ref={(node) => {
-                    triggerRefs.current[entry.label] = node;
-                  }}
-                  aria-expanded={openPanel === entry.label}
-                  aria-controls={panelId(entry.label)}
-                  onClick={() =>
-                    setOpenPanel((current) =>
-                      current === entry.label ? null : entry.label
-                    )
-                  }
-                  className="text-muted hover:text-foreground rounded-token inline-flex items-center gap-1.5 px-3 py-2 text-sm transition-colors"
-                >
-                  {entry.label}
-                  <PlusIcon open={openPanel === entry.label} />
-                </button>
-              </li>
-            ) : (
-              <li key={entry.label}>
-                <Link
-                  href={entry.href}
-                  className="text-muted hover:text-foreground rounded-token inline-flex px-3 py-2 text-sm transition-colors"
-                >
-                  {entry.label}
-                </Link>
-              </li>
-            )
-          )}
-        </ul>
-
-        {/* Right cluster — shrinkable (min-w-0), so a long CTA label can never
-            push the burger out of the viewport; the burger itself never shrinks. */}
-        <div className="flex min-w-0 items-center gap-2">
-          {secondaryLink ? (
-            <Link
-              href={secondaryLink.href}
-              className="text-muted hover:text-foreground hidden px-3 py-2 text-sm whitespace-nowrap transition-colors lg:inline-flex"
-            >
-              {secondaryLink.label}
-            </Link>
-          ) : null}
+          {/* min-w-0 + a truncating label: the logo yields space first, so long
+            brand names can never widen the header past the viewport. */}
           <Link
-            href={cta.href}
-            className="bg-primary text-primary-foreground inline-flex min-w-0 max-w-[42vw] items-center justify-center rounded-full px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90 sm:max-w-none sm:px-4"
+            href={logo.href}
+            className="text-foreground flex min-w-0 items-center gap-2 text-lg font-semibold tracking-tight"
           >
-            <span className="truncate">{cta.label}</span>
+            <span className="inline-flex shrink-0">
+              {logo.mark ?? <BrandMark size={22} className="text-primary" />}
+            </span>
+            <span className="font-display truncate">{logo.label}</span>
           </Link>
-          <button
-            ref={burgerRef}
-            type="button"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileOpen}
-            aria-controls="navbar-03-overlay"
-            onClick={() => setMobileOpen((v) => !v)}
-            className="text-foreground rounded-token inline-flex shrink-0 items-center justify-center p-2 lg:hidden"
-          >
-            <BurgerIcon />
-          </button>
-        </div>
-      </nav>
 
-      {/* Desktop panels — kept mounted so opening and closing both animate;
-          the closed ones are inert, so they stay out of the tab order. */}
-      {items.filter(hasPanel).map((entry) => {
-        const isOpen = openPanel === entry.label;
-        return (
-          <div
-            key={entry.label}
-            id={panelId(entry.label)}
-            inert={!isOpen}
-            className={[
-              'absolute inset-x-0 top-full hidden px-4 pt-2 transition duration-200 lg:block',
-              isOpen
-                ? 'translate-y-0 opacity-100'
-                : 'pointer-events-none -translate-y-1 opacity-0',
-            ].join(' ')}
-          >
-            <div className="rounded-token border-border bg-background mx-auto grid max-w-6xl gap-8 border p-6 shadow-sm lg:grid-cols-[1fr_auto] lg:p-8">
-              <div className="grid gap-8 sm:grid-cols-2">
-                {entry.panel.groups.map((group) => (
-                  <div key={group.title ?? group.links[0]?.label}>
-                    {group.title ? (
-                      <p className="text-muted mb-3 text-xs font-medium tracking-wide uppercase">
-                        {group.title}
-                      </p>
-                    ) : null}
-                    <ul className="space-y-1">
-                      {group.links.map((link) => (
-                        <li key={link.label}>
-                          <Link
-                            href={link.href}
-                            onClick={() => setOpenPanel(null)}
-                            className="rounded-token hover:bg-surface group/link -mx-2 flex items-start gap-3 px-2 py-2 transition-colors"
-                          >
-                            <span className="min-w-0">
-                              <span className="text-foreground block text-sm font-medium">
-                                {link.label}
-                              </span>
-                              {link.description ? (
-                                <span className="text-muted mt-0.5 block text-sm">
-                                  {link.description}
-                                </span>
-                              ) : null}
-                            </span>
-                            <span className="text-muted group-hover/link:text-foreground mt-0.5 transition-colors">
-                              <ArrowCircleIcon />
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              {entry.panel.featured ? (
-                <div className="lg:w-64">
-                  <Link
-                    href={entry.panel.featured.href}
-                    onClick={() => setOpenPanel(null)}
-                    className="group/feat block"
+          {/* Desktop entries */}
+          <ul className="hidden items-center gap-1 lg:flex">
+            {items.map((entry, index) =>
+              hasPanel(entry) ? (
+                <li key={entry.label}>
+                  <button
+                    type="button"
+                    ref={(node) => {
+                      triggerRefs.current[entry.label] = node;
+                    }}
+                    aria-expanded={openPanel === entry.label}
+                    aria-controls={panelId(index)}
+                    onClick={() =>
+                      setOpenPanel((current) =>
+                        current === entry.label ? null : entry.label
+                      )
+                    }
+                    className="text-muted hover:text-foreground rounded-token inline-flex items-center gap-1.5 px-3 py-2 text-sm transition-colors"
                   >
-                    <span className="rounded-token bg-surface relative block aspect-[4/3] overflow-hidden">
-                      <Image
-                        src={entry.panel.featured.image.src}
-                        alt={entry.panel.featured.image.alt}
-                        fill
-                        sizes="16rem"
-                        className="object-cover"
-                      />
-                    </span>
-                    {entry.panel.featured.label ? (
-                      <span className="text-muted mt-3 block text-xs font-medium tracking-wide uppercase">
-                        {entry.panel.featured.label}
-                      </span>
-                    ) : null}
-                    <span className="font-display text-foreground mt-1 block text-base font-semibold">
-                      {entry.panel.featured.title}
-                    </span>
-                    <span className="text-foreground mt-2 inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4 group-hover/feat:no-underline">
-                      {entry.panel.featured.linkLabel ?? 'Read more'}
-                      <ArrowCircleIcon />
-                    </span>
+                    {entry.label}
+                    <Plus
+                      size={16}
+                      className={`shrink-0 transition-transform duration-200 ${
+                        openPanel === entry.label ? 'rotate-45' : ''
+                      }`}
+                    />
+                  </button>
+                </li>
+              ) : (
+                <li key={entry.label}>
+                  <Link
+                    href={entry.href}
+                    className="text-muted hover:text-foreground rounded-token inline-flex px-3 py-2 text-sm transition-colors"
+                  >
+                    {entry.label}
                   </Link>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        );
-      })}
+                </li>
+              )
+            )}
+          </ul>
 
-    </header>
+          {/* Right cluster — shrinkable (min-w-0), so a long CTA label can never
+            push the burger out of the viewport; the burger itself never shrinks. */}
+          <div className="flex min-w-0 items-center gap-2">
+            {secondaryLink ? (
+              <Link
+                href={secondaryLink.href}
+                className="text-muted hover:text-foreground hidden px-3 py-2 text-sm whitespace-nowrap transition-colors lg:inline-flex"
+              >
+                {secondaryLink.label}
+              </Link>
+            ) : null}
+            <Link
+              href={cta.href}
+              className="bg-primary text-primary-foreground inline-flex max-w-[42vw] min-w-0 items-center justify-center rounded-full px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90 sm:max-w-none sm:px-4"
+            >
+              <span className="truncate">{cta.label}</span>
+            </Link>
+            <button
+              ref={burgerRef}
+              type="button"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
+              aria-controls={overlayId}
+              onClick={() => setMobileOpen((v) => !v)}
+              className="text-foreground rounded-token inline-flex shrink-0 items-center justify-center p-2 lg:hidden"
+            >
+              <List size={24} />
+            </button>
+          </div>
+        </nav>
+
+        {/* Desktop panels — kept mounted so opening and closing both animate;
+          the closed ones are inert, so they stay out of the tab order. */}
+        {items.map((entry, index) => {
+          if (!hasPanel(entry)) return null;
+          const isOpen = openPanel === entry.label;
+          return (
+            <div
+              key={entry.label}
+              id={panelId(index)}
+              inert={!isOpen}
+              className={[
+                'absolute inset-x-0 top-full hidden px-4 pt-2 transition duration-200 lg:block',
+                isOpen
+                  ? 'translate-y-0 opacity-100'
+                  : 'pointer-events-none -translate-y-1 opacity-0',
+              ].join(' ')}
+            >
+              <div className="rounded-token border-border bg-background mx-auto grid max-w-6xl gap-8 border p-6 shadow-sm lg:grid-cols-[1fr_auto] lg:p-8">
+                <div className="grid gap-8 sm:grid-cols-2">
+                  {entry.panel.groups.map((group) => (
+                    <div key={group.title ?? group.links[0]?.label}>
+                      {group.title ? (
+                        <p className="text-muted mb-3 text-xs font-medium tracking-wide uppercase">
+                          {group.title}
+                        </p>
+                      ) : null}
+                      <ul className="space-y-1">
+                        {group.links.map((link) => (
+                          <li key={link.label}>
+                            <Link
+                              href={link.href}
+                              onClick={() => setOpenPanel(null)}
+                              className="rounded-token hover:bg-accent group/link -mx-2 flex items-start gap-3 px-2 py-2 transition-colors"
+                            >
+                              <span className="min-w-0">
+                                <span className="text-foreground block text-sm font-medium">
+                                  {link.label}
+                                </span>
+                                {link.description ? (
+                                  <span className="text-muted mt-0.5 block text-sm">
+                                    {link.description}
+                                  </span>
+                                ) : null}
+                              </span>
+                              <span className="text-muted group-hover/link:text-foreground mt-0.5 transition-colors">
+                                <ArrowCircleRight size={18} className="shrink-0" />
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+
+                {entry.panel.featured ? (
+                  <div className="lg:w-64">
+                    <Link
+                      href={entry.panel.featured.href}
+                      onClick={() => setOpenPanel(null)}
+                      className="group/feat block"
+                    >
+                      <span className="rounded-token bg-surface relative block aspect-[4/3] overflow-hidden">
+                        <Image
+                          src={entry.panel.featured.image.src}
+                          alt={entry.panel.featured.image.alt}
+                          fill
+                          sizes="16rem"
+                          className="object-cover"
+                        />
+                      </span>
+                      {entry.panel.featured.label ? (
+                        <span className="text-muted mt-3 block text-xs font-medium tracking-wide uppercase">
+                          {entry.panel.featured.label}
+                        </span>
+                      ) : null}
+                      <span className="font-display text-foreground mt-1 block text-base font-semibold">
+                        {entry.panel.featured.title}
+                      </span>
+                      <span className="text-foreground mt-2 inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4 group-hover/feat:no-underline">
+                        {entry.panel.featured.linkLabel ?? 'Read more'}
+                        <ArrowCircleRight size={18} className="shrink-0" />
+                      </span>
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          );
+        })}
+      </header>
 
       {/* Mobile / tablet fullscreen overlay — a SIBLING of the header, not a
           child: the header's backdrop-blur (a backdrop-filter) makes the header
@@ -383,7 +397,7 @@ export function Navbar03({
           by the real viewport. */}
       {mobileOpen ? (
         <div
-          id="navbar-03-overlay"
+          id={overlayId}
           className="bg-background fixed inset-0 z-50 flex flex-col overflow-y-auto lg:hidden"
         >
           <div className="border-border flex h-16 shrink-0 items-center justify-between gap-3 border-b px-4 sm:gap-4 sm:px-6">
@@ -392,14 +406,16 @@ export function Navbar03({
               onClick={closeOverlay}
               className="text-foreground flex min-w-0 items-center gap-2 text-lg font-semibold tracking-tight"
             >
-              <span className="inline-flex shrink-0">{logo.mark ?? <BrandMark />}</span>
+              <span className="inline-flex shrink-0">
+                {logo.mark ?? <BrandMark size={22} className="text-primary" />}
+              </span>
               <span className="font-display truncate">{logo.label}</span>
             </Link>
             <div className="flex min-w-0 items-center gap-2">
               <Link
                 href={cta.href}
                 onClick={closeOverlay}
-                className="bg-primary text-primary-foreground inline-flex min-w-0 max-w-[42vw] items-center justify-center rounded-full px-3 py-2 text-sm font-medium sm:max-w-none sm:px-4"
+                className="bg-primary text-primary-foreground inline-flex max-w-[42vw] min-w-0 items-center justify-center rounded-full px-3 py-2 text-sm font-medium sm:max-w-none sm:px-4"
               >
                 <span className="truncate">{cta.label}</span>
               </Link>
@@ -413,20 +429,20 @@ export function Navbar03({
                 }}
                 className="text-foreground rounded-token inline-flex shrink-0 items-center justify-center p-2"
               >
-                <CloseIcon />
+                <X size={24} />
               </button>
             </div>
           </div>
 
           <div className="flex-1 px-4 py-4 sm:px-6">
             <ul className="divide-border divide-y">
-              {items.map((entry) =>
+              {items.map((entry, index) =>
                 hasPanel(entry) ? (
                   <li key={entry.label}>
                     <button
                       type="button"
                       aria-expanded={openSection === entry.label}
-                      aria-controls={`${panelId(entry.label)}-mobile`}
+                      aria-controls={`${panelId(index)}-mobile`}
                       onClick={() =>
                         setOpenSection((current) =>
                           current === entry.label ? null : entry.label
@@ -435,10 +451,15 @@ export function Navbar03({
                       className="text-foreground flex w-full items-center justify-between gap-4 py-4 text-left text-lg font-medium"
                     >
                       {entry.label}
-                      <PlusIcon open={openSection === entry.label} />
+                      <Plus
+                        size={16}
+                        className={`shrink-0 transition-transform duration-200 ${
+                          openSection === entry.label ? 'rotate-45' : ''
+                        }`}
+                      />
                     </button>
                     <div
-                      id={`${panelId(entry.label)}-mobile`}
+                      id={`${panelId(index)}-mobile`}
                       hidden={openSection !== entry.label}
                       className="pb-4"
                     >
@@ -455,7 +476,7 @@ export function Navbar03({
                                 <Link
                                   href={link.href}
                                   onClick={closeOverlay}
-                                  className="rounded-token hover:bg-surface -mx-2 block px-2 py-2"
+                                  className="rounded-token hover:bg-accent -mx-2 block px-2 py-2"
                                 >
                                   <span className="text-foreground block text-base">
                                     {link.label}
@@ -511,120 +532,5 @@ export function Navbar03({
         </div>
       ) : null}
     </>
-  );
-}
-
-/* --- Inline icons (Lucide paths, ISC) — per BLOCK-SPEC §7 --- */
-
-function BrandMark() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className="text-primary"
-    >
-      <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
-      <rect
-        x="14"
-        y="3"
-        width="7"
-        height="7"
-        rx="1.5"
-        fill="currentColor"
-        opacity="0.55"
-      />
-      <rect
-        x="3"
-        y="14"
-        width="7"
-        height="7"
-        rx="1.5"
-        fill="currentColor"
-        opacity="0.55"
-      />
-      <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" />
-    </svg>
-  );
-}
-
-/** Lucide "plus" — rotates 45° into a cross when the panel is open (CSS only). */
-function PlusIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={`shrink-0 transition-transform duration-200 ${open ? 'rotate-45' : ''}`}
-    >
-      <path d="M5 12h14M12 5v14" />
-    </svg>
-  );
-}
-
-function ArrowCircleIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M8 12h8M12 8l4 4-4 4" />
-    </svg>
-  );
-}
-
-function BurgerIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
   );
 }

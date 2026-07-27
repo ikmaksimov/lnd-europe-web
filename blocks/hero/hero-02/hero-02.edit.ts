@@ -12,7 +12,13 @@ export const editSchema: EditSchema = {
     { key: 'secondaryCta', label: 'Secondary CTA', kind: 'link', withLabel: true },
     { key: 'background', label: 'Background image', kind: 'image' },
     { key: 'overlay', label: 'Legibility scrim', kind: 'boolean' },
-    { key: 'headingLevel', label: 'Heading level', kind: 'select', options: ['h1', 'h2'] },
+    { key: 'tone', label: 'Tone', kind: 'select', options: ['light', 'dark'] },
+    {
+      key: 'headingLevel',
+      label: 'Heading level',
+      kind: 'select',
+      options: ['h1', 'h2'],
+    },
     {
       key: 'items',
       label: 'Reassurance strip',

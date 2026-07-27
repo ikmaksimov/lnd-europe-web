@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef } from 'react';
+import { useId, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { BlockBaseProps } from '@/lib/animations/types';
 import { useBlockAnimation } from '@/lib/animations/use-block-animation';
 import { fadeIn, staggerChildren } from '@/lib/animations/presets';
+import { ArrowUpRight } from '@/lib/icons';
 
 interface FooterLink {
   label: string;
@@ -34,6 +35,9 @@ export interface Footer02Props extends BlockBaseProps {
   legalLinks?: FooterLink[];
   /** Studio credit in the legal strip. */
   credit?: FooterLink;
+  /** Root for this instance's DOM ids. Defaults to a per-instance React id, so
+   *  the block can be used twice on a page. Technical, not content (BLOCK-SPEC §10). */
+  htmlId?: string;
 }
 
 const DEFAULT_LINKS: FooterLink[] = [
@@ -77,10 +81,13 @@ export function Footer02({
   copyright = '© 2026 Vora Mar. All rights reserved.',
   legalLinks = DEFAULT_LEGAL,
   credit = { label: 'Made by DigitalForms', href: 'https://digitalforms.es' },
+  htmlId,
   animationLevel = 'subtle',
 }: Footer02Props) {
   const scope = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLUListElement>(null);
+  const autoId = useId();
+  const titleId = `${htmlId ?? autoId}-title`;
 
   useBlockAnimation(animationLevel, scope, (level) => {
     fadeIn(scope.current?.querySelector('[data-f2-statement]'));
@@ -90,10 +97,10 @@ export function Footer02({
   return (
     <footer
       ref={scope}
-      aria-labelledby="footer-02-title"
+      aria-labelledby={titleId}
       className="bg-primary text-primary-foreground"
     >
-      <h2 id="footer-02-title" className="sr-only">
+      <h2 id={titleId} className="sr-only">
         Site footer
       </h2>
 
@@ -123,7 +130,10 @@ export function Footer02({
                       className="group border-primary-foreground/40 hover:border-primary-foreground focus-visible:border-primary-foreground font-display inline-flex items-center gap-2 border-b pb-1 text-xl font-semibold tracking-tight uppercase transition-colors sm:text-2xl"
                     >
                       {link.label}
-                      <ArrowUpRightIcon />
+                      <ArrowUpRight
+                        size={18}
+                        className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover/feat:translate-x-0.5 group-hover/feat:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5"
+                      />
                     </Link>
                   </li>
                 ))}
@@ -154,7 +164,10 @@ export function Footer02({
                 </span>
                 <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4 group-hover/feat:no-underline">
                   {featured.linkLabel ?? 'Read more'}
-                  <ArrowUpRightIcon />
+                  <ArrowUpRight
+                    size={18}
+                    className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover/feat:translate-x-0.5 group-hover/feat:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5"
+                  />
                 </span>
               </Link>
             </div>
@@ -192,27 +205,5 @@ export function Footer02({
         </div>
       </div>
     </footer>
-  );
-}
-
-/* --- Inline icon (Lucide "arrow-up-right", ISC) — per BLOCK-SPEC §7 --- */
-
-function ArrowUpRightIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover/feat:translate-x-0.5 group-hover/feat:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5"
-    >
-      <path d="M7 7h10v10" />
-      <path d="M7 17 17 7" />
-    </svg>
   );
 }

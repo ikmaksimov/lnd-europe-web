@@ -1,0 +1,78 @@
+/*
+  Trencadís theme — neutral
+  ==========================================================================
+  A monochrome warm-neutral (stone) scale. The library's default: it sells the
+  structure of the blocks, not a palette, so every client site repaints from
+  here. Calm, editorial, works for any sector.
+
+  A theme file is VALUES only. The mechanics — the `@theme inline` mapping, the
+  custom utilities, the base layer — live in `app/globals.css` and are the same
+  whichever theme is active. Swapping themes is swapping this one import.
+
+  Both variants ship together: `:root` is the light set, `.theme-dark` is the
+  scoped dark set (BLOCK-SPEC §12) that any subtree can opt into.
+*/
+
+:root {
+  /* Surfaces & text */
+  --background: #ffffff; /* page background */
+  --surface: #fafaf9; /* raised bands / card fills */
+  --foreground: #1c1917; /* primary text */
+  --muted: #635c57; /* secondary / muted text — 6.5:1 on background */
+  --border: #e7e5e4; /* decorative hairlines — card outlines, dividers */
+  --border-strong: #94908c; /* meaningful boundaries (form controls) — 3.2:1 */
+
+  /* Primary (monochrome dark) */
+  --primary: #1c1917;
+  --primary-foreground: #fafaf9;
+
+  /* Accent — neutral tone of the same grey scale */
+  --accent: #f5f5f4;
+  --accent-foreground: #1c1917;
+
+  /* Status roles. Used as text (validation messages, invalid field borders) and
+     as fills; each foreground is the readable type ON that fill. */
+  --danger: #b42318;
+  --danger-foreground: #ffffff;
+  --success: #05683e;
+  --success-foreground: #ffffff;
+
+  /* Decorative tints — background gradients / glows ONLY (never text/borders). */
+  --tint-1: #f5f5f4;
+  --tint-2: #eeece9;
+  --tint-3: #e7e5e4;
+
+  /* Shape */
+  --radius: 0.75rem;
+}
+
+.theme-dark {
+  color-scheme: dark;
+
+  /* Mirrored on the same ramp: white <-> stone-900, stone-50 <-> stone-800. */
+  --background: #1c1917;
+  --surface: #292524;
+  --foreground: #fafaf9;
+  --muted: #a8a29e;
+  --border: #44403c;
+  --border-strong: #6b645e;
+
+  /* Primary inverts: a light band with dark type inside a dark scope. */
+  --primary: #fafaf9;
+  --primary-foreground: #1c1917;
+
+  --accent: #44403c;
+  --accent-foreground: #fafaf9;
+
+  /* On a dark surface the status roles lighten and take dark type. */
+  --danger: #fda29b;
+  --danger-foreground: #1c1917;
+  --success: #86efac;
+  --success-foreground: #1c1917;
+
+  --tint-1: #292524;
+  --tint-2: #35312e;
+  --tint-3: #44403c;
+
+  --radius: 0.75rem;
+}
