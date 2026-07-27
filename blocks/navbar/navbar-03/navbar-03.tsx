@@ -35,6 +35,29 @@ export interface Navbar03Props extends BlockBaseProps {
   items?: NavEntry[];
   secondaryLink?: { label: string; href: string };
   cta?: { label: string; href: string };
+  /**
+   * Decorate the menu labels without editing this block (BLOCK-SPEC §16).
+   *
+   * Covers exactly **the labels that come from `items`**: the top-level entries
+   * — link entries and mega-panel triggers alike — and the links inside a mega
+   * panel, in both the desktop bar and the mobile overlay. That is the whole
+   * rule; there is no second condition to remember.
+   *
+   * Deliberately NOT covered: the logo, the CTA, the secondary link, the
+   * featured card's overline / title / link text, mega-group titles and link
+   * descriptions. Those are chrome around the menu, not the menu, and a page
+   * that scrambles its own brand name or its "Request a visit" button is
+   * almost certainly not what was asked for.
+   *
+   * The **string stays the single source**: React keys, the open-panel state,
+   * trigger refs and every `aria-*` value keep reading `label`, never the node
+   * this returns. Technical, not content — never in `editSchema`/`defaults`.
+   *
+   * ```tsx
+   * <Navbar03 renderLabel={(l) => <ScrambleText text={l} trigger="hover" />} />
+   * ```
+   */
+  renderLabel?: (label: string) => ReactNode;
   /** Root for this instance's DOM ids. Defaults to a per-instance React id, so
    *  the block can be used twice on a page. Technical, not content (BLOCK-SPEC §10). */
   htmlId?: string;
@@ -134,11 +157,17 @@ export function Navbar03({
   items = DEFAULT_ITEMS,
   secondaryLink = { label: 'Owner login', href: '#' },
   cta = { label: 'Request a visit', href: '/demo#contact' },
+  renderLabel,
   htmlId,
 }: Navbar03Props) {
   const [openPanel, setOpenPanel] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  // The only place a menu label becomes a node. Absent the prop this returns the
+  // string itself, so the markup is byte-identical to a block without the seam.
+  const labelNode = (label: string): ReactNode =>
+    renderLabel ? renderLabel(label) : label;
 
   // Ids are instance-scoped (two navbars can share a page) and derived from the
   // entry's index, not its label — two entries may legitimately share a label.
@@ -245,7 +274,7 @@ export function Navbar03({
                     }
                     className="text-muted hover:text-foreground rounded-token inline-flex items-center gap-1.5 px-3 py-2 text-sm transition-colors"
                   >
-                    {entry.label}
+                    {labelNode(entry.label)}
                     <Plus
                       size={16}
                       className={`shrink-0 transition-transform duration-200 ${
@@ -260,7 +289,7 @@ export function Navbar03({
                     href={entry.href}
                     className="text-muted hover:text-foreground rounded-token inline-flex px-3 py-2 text-sm transition-colors"
                   >
-                    {entry.label}
+                    {labelNode(entry.label)}
                   </Link>
                 </li>
               )
@@ -334,7 +363,7 @@ export function Navbar03({
                             >
                               <span className="min-w-0">
                                 <span className="text-foreground block text-sm font-medium">
-                                  {link.label}
+                                  {labelNode(link.label)}
                                 </span>
                                 {link.description ? (
                                   <span className="text-muted mt-0.5 block text-sm">
@@ -450,7 +479,7 @@ export function Navbar03({
                       }
                       className="text-foreground flex w-full items-center justify-between gap-4 py-4 text-left text-lg font-medium"
                     >
-                      {entry.label}
+                      {labelNode(entry.label)}
                       <Plus
                         size={16}
                         className={`shrink-0 transition-transform duration-200 ${
@@ -479,7 +508,7 @@ export function Navbar03({
                                   className="rounded-token hover:bg-accent -mx-2 block px-2 py-2"
                                 >
                                   <span className="text-foreground block text-base">
-                                    {link.label}
+                                    {labelNode(link.label)}
                                   </span>
                                   {link.description ? (
                                     <span className="text-muted mt-0.5 block text-sm">
@@ -501,7 +530,7 @@ export function Navbar03({
                       onClick={closeOverlay}
                       className="text-foreground block py-4 text-lg font-medium"
                     >
-                      {entry.label}
+                      {labelNode(entry.label)}
                     </Link>
                   </li>
                 )

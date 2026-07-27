@@ -38,15 +38,35 @@ Open http://localhost:3000 — you'll see the placeholder home.
    (keep a single `<h1>` per page). Or paste the `page.tsx` exported from the
    Trencadís Page Editor.
 
-4. **Theme** — re-colour the whole site by editing the token values in
-   `:root` in `app/globals.css`. Blocks re-theme with zero code changes.
+4. **Theme** — the palette is a file: `themes/<name>.css`, activated by one
+   import in `app/globals.css`. `npx trencadis theme list` shows what ships;
+   `npx trencadis theme add sand` copies one in. Re-colour by editing the values
+   in that file — blocks re-theme with zero code changes.
 
 ## Deploy
 
 Deploy like any Next.js app (e.g. Vercel). Set the production URL in
 `site.config.ts` first so canonical URLs, the sitemap, and OG tags are correct.
 
-## Updating blocks
+## Updating
 
-Re-run `npx trencadis add <block> --force` to pull the latest version of a block
-from the library into this repo.
+You own this code, so library improvements do not arrive on their own — nothing
+we release can break this site, and nothing we improve reaches it until you ask:
+
+```bash
+npx trencadis status          # what has moved on in the library?
+npx trencadis update          # a plan — changes nothing
+npx trencadis update --apply  # performs exactly that plan
+```
+
+`trencadis.json` records what this site was copied from and a hash per file, so
+a block **you edited is never overwritten** (it is reported, and updates only
+with `--force <block>`). Sidecars, the theme and the `trencadis:css` region in
+`globals.css` are always refreshed together with any block, because a new block
+against an old token layer does not work. Inside `globals.css` only the marked
+region is replaced — your own imports and overrides stay put; the one thing
+`update` may add is the `@import '../themes/<name>.css';` line, if the file has
+none, since without it no colour token resolves.
+
+Keep client content in **props in `app/page.tsx`**, not in edits to block files —
+that is what keeps updates free.

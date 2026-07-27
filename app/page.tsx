@@ -2,7 +2,7 @@ import type { Organization, WithContext } from 'schema-dts';
 import Image from 'next/image';
 import { JsonLd } from '@/components/json-ld';
 import { siteConfig } from '@/site.config';
-import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
+import { SiteNavbar } from '@/components/site-navbar';
 import { Hero02 } from '@/blocks/hero/hero-02/hero-02';
 import { Statement01 } from '@/blocks/statement/statement-01/statement-01';
 import { Features03 } from '@/blocks/features/features-03/features-03';
@@ -201,7 +201,7 @@ export default function Home() {
   return (
     <>
       <JsonLd data={organizationLd} />
-      <Navbar03
+      <SiteNavbar
         // The logo is a wordmark, so it replaces the text label rather than
         // sitting next to it; its alt carries the link's accessible name.
         logo={{

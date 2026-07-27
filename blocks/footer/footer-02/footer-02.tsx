@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useRef } from 'react';
+import { useId, useRef, type ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { BlockBaseProps } from '@/lib/animations/types';
@@ -35,6 +35,25 @@ export interface Footer02Props extends BlockBaseProps {
   legalLinks?: FooterLink[];
   /** Studio credit in the legal strip. */
   credit?: FooterLink;
+  /**
+   * Decorate the navigation labels without editing this block (BLOCK-SPEC §16).
+   *
+   * Covers exactly **the labels that come from `links`** — the large uppercase
+   * nav list. That is the whole rule.
+   *
+   * Deliberately NOT covered: `legalLinks`, the studio `credit`, the featured
+   * card's overline / title / link text, the brand line and the statement. The
+   * legal strip is small print, not navigation; a decorated "Privacy" is noise.
+   *
+   * The **string stays the single source**: React keys and everything else keep
+   * reading `label`, never the node this returns. Technical, not content — never
+   * in `editSchema`/`defaults`.
+   *
+   * ```tsx
+   * <Footer02 renderLabel={(l) => <ScrambleText text={l} trigger="hover" />} />
+   * ```
+   */
+  renderLabel?: (label: string) => ReactNode;
   /** Root for this instance's DOM ids. Defaults to a per-instance React id, so
    *  the block can be used twice on a page. Technical, not content (BLOCK-SPEC §10). */
   htmlId?: string;
@@ -81,9 +100,15 @@ export function Footer02({
   copyright = '© 2026 Vora Mar. All rights reserved.',
   legalLinks = DEFAULT_LEGAL,
   credit = { label: 'Made by DigitalForms', href: 'https://digitalforms.es' },
+  renderLabel,
   htmlId,
   animationLevel = 'subtle',
 }: Footer02Props) {
+  // The only place a nav label becomes a node. Absent the prop this returns the
+  // string itself, so the markup is byte-identical to a block without the seam.
+  const labelNode = (label: string): ReactNode =>
+    renderLabel ? renderLabel(label) : label;
+
   const scope = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLUListElement>(null);
   const autoId = useId();
@@ -129,7 +154,7 @@ export function Footer02({
                       href={link.href}
                       className="group border-primary-foreground/40 hover:border-primary-foreground focus-visible:border-primary-foreground font-display inline-flex items-center gap-2 border-b pb-1 text-xl font-semibold tracking-tight uppercase transition-colors sm:text-2xl"
                     >
-                      {link.label}
+                      {labelNode(link.label)}
                       <ArrowUpRight
                         size={18}
                         className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover/feat:translate-x-0.5 group-hover/feat:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5"

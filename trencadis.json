@@ -1,0 +1,145 @@
+{
+  "manifestVersion": 1,
+  "//": "Written by the Trencadís CLI. It records what this site was copied from and a hash per copied file, so `trencadis status` and `trencadis update` can tell an untouched file from one you edited. Safe to read, safe to commit; edit it only if you know what you are claiming.",
+  "library": {
+    "name": "trencadis",
+    "version": "0.1.0",
+    "commit": "b70f3490c1"
+  },
+  "installedAt": "2026-07-27T13:35:27.744Z",
+  "updatedAt": "2026-07-27T13:35:27.744Z",
+  "blocks": {
+    "cta-02": {
+      "category": "cta",
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "blocks/cta/cta-02/cta-02.edit.ts": "sha256:ea0443c8e4f9edf1",
+        "blocks/cta/cta-02/cta-02.tsx": "sha256:7beba57c2d419297",
+        "blocks/cta/cta-02/meta.json": "sha256:0e8d140bf85e48ff"
+      }
+    },
+    "features-03": {
+      "category": "features",
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "blocks/features/features-03/features-03.tsx": "sha256:71b8a76f703e64bd",
+        "blocks/features/features-03/meta.json": "sha256:d344659f8c9a069c"
+      }
+    },
+    "footer-02": {
+      "category": "footer",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "b70f3490c1"
+      },
+      "files": {
+        "blocks/footer/footer-02/footer-02.tsx": "sha256:5fd8086c2dc15d37",
+        "blocks/footer/footer-02/meta.json": "sha256:2dedbfe6c2c495ce"
+      }
+    },
+    "hero-02": {
+      "category": "hero",
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "blocks/hero/hero-02/hero-02.edit.ts": "sha256:c44f38dc92110a76",
+        "blocks/hero/hero-02/hero-02.tsx": "sha256:5cb7b1f31d66aeeb",
+        "blocks/hero/hero-02/meta.json": "sha256:5822757efbdc2d38"
+      }
+    },
+    "navbar-03": {
+      "category": "navbar",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "b70f3490c1"
+      },
+      "files": {
+        "blocks/navbar/navbar-03/meta.json": "sha256:629acaa69a3d5136",
+        "blocks/navbar/navbar-03/navbar-03.tsx": "sha256:8a0dd42c3da40ec6"
+      }
+    },
+    "statement-01": {
+      "category": "statement",
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "blocks/statement/statement-01/meta.json": "sha256:e5667c9887bddfec",
+        "blocks/statement/statement-01/statement-01.edit.ts": "sha256:3eb3961b182f3fba",
+        "blocks/statement/statement-01/statement-01.tsx": "sha256:0f8f43df0601864c"
+      }
+    },
+    "steps-01": {
+      "category": "steps",
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "blocks/steps/steps-01/meta.json": "sha256:f1587d759be6cb36",
+        "blocks/steps/steps-01/steps-01.tsx": "sha256:772c54c6eb60726c"
+      }
+    }
+  },
+  "sidecars": {
+    "lib/animations": {
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "lib/animations/lenis-provider.tsx": "sha256:382a8cfe82c39bc0",
+        "lib/animations/presets.ts": "sha256:1bcef977a67e1dae",
+        "lib/animations/types.ts": "sha256:f6b1654d8e2531b4",
+        "lib/animations/use-block-animation.ts": "sha256:5a205357bd0ddd55"
+      }
+    },
+    "lib/edit-schema.ts": {
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "lib/edit-schema.ts": "sha256:cbc53ccbdadf0fef"
+      }
+    },
+    "lib/effects": {
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "lib/effects/index.ts": "sha256:f67790d225ab3590",
+        "lib/effects/magnetic.tsx": "sha256:b7c9af38fe23ce3d",
+        "lib/effects/reduced-motion.ts": "sha256:8529c969c3dc707e",
+        "lib/effects/scramble-text.tsx": "sha256:82c127f4e093169e",
+        "lib/effects/typewriter.tsx": "sha256:2e98e566ff932164"
+      }
+    },
+    "lib/icons.tsx": {
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "lib/icons.tsx": "sha256:531dc5e7884a0f9e"
+      }
+    }
+  },
+  "themes": {
+    "neutral": {
+      "provenance": "unknown",
+      "from": null,
+      "files": {
+        "themes/neutral.css": "sha256:51d047779f90d2cb"
+      }
+    }
+  },
+  "css": {
+    "path": "app/globals.css",
+    "provenance": "unknown",
+    "from": null,
+    "hash": "sha256:3ac1c21ffde231fb"
+  },
+  "adoptedAt": "2026-07-27T13:34:57.398Z",
+  "adoptedWith": {
+    "name": "trencadis",
+    "version": "0.1.0",
+    "commit": "b70f3490c1"
+  }
+}
