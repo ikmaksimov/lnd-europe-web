@@ -2,7 +2,7 @@ import type { Organization, WithContext } from 'schema-dts';
 import Image from 'next/image';
 import { JsonLd } from '@/components/json-ld';
 import { siteConfig } from '@/site.config';
-import { SiteNavbar } from '@/components/site-navbar';
+import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
 import { Hero02 } from '@/blocks/hero/hero-02/hero-02';
 import { Statement01 } from '@/blocks/statement/statement-01/statement-01';
 import { Features03 } from '@/blocks/features/features-03/features-03';
@@ -35,16 +35,24 @@ const organizationLd: WithContext<Organization> = {
 };
 
 /** The single booking action, shared by the header, the hero and the closing CTA. */
-const BOOK_A_CALL = { label: 'Book a strategy call', href: '#contact' };
+const BOOK_A_CALL = {
+  label: 'Book a strategy call',
+  href: 'https://www.linkedin.com/company/lnd-tech-europe',
+};
 
-/** Featured card — same content in the header mega menu and the footer. */
+/**
+ * Featured card — same content in the header mega menu and the footer. Points at
+ * the LinkedIn launch post; the title is a line lifted from it. The share URL's
+ * tracking parameters are stripped, leaving the canonical post link.
+ */
 const FEATURED = {
   label: 'Featured',
-  // Placeholder art: swap for a client visual and give it a describing alt.
-  image: { src: '/placeholders/featured.svg', alt: '' },
-  title: "The future of European B2B growth isn't more data. It's better intelligence.",
-  href: '#why',
-  linkLabel: 'Read more',
+  // The post's own artwork. It sits inside a link that already carries the
+  // title, so the image itself is decorative.
+  image: { src: '/featured-post.jpg', alt: '' },
+  title: 'The data behind most B2B strategies stays frozen in time.',
+  href: 'https://www.linkedin.com/posts/lnd-tech-europe_b2bgrowth-commercialintelligence-aiforbusiness-activity-7487485019423215616-FMoc',
+  linkLabel: 'Read on LinkedIn',
 };
 
 const NAV_ITEMS = [
@@ -199,7 +207,7 @@ export default function Home() {
   return (
     <>
       <JsonLd data={organizationLd} />
-      <SiteNavbar
+      <Navbar03
         // The logo is a wordmark, so it replaces the text label rather than
         // sitting next to it; its alt carries the link's accessible name.
         logo={{
