@@ -59,7 +59,7 @@ const NAV_ITEMS = [
           links: [
             {
               label: 'About',
-              description: 'The AI infrastructure behind European B2B growth.',
+              description: 'The intelligence infrastructure behind European B2B growth.',
               href: '#why',
             },
             {
@@ -77,8 +77,8 @@ const NAV_ITEMS = [
 
 const HERO_STATS = [
   { label: '10+ years in European B2B', icon: <Clock size={20} /> },
-  { label: 'In-house AI engine', icon: <Cpu size={20} /> },
-  { label: 'Pan-European company intelligence', icon: <Globe size={20} /> },
+  { label: 'In-house intelligence engine', icon: <Cpu size={20} /> },
+  { label: 'Pan-European coverage', icon: <Globe size={20} /> },
 ];
 
 const SOLUTIONS = [
@@ -231,8 +231,8 @@ export default function Home() {
           underHeader
           badge="10+ years in European B2B"
           eyebrow="AI growth intelligence · Europe"
-          title="The AI infrastructure behind European B2B growth."
-          subtitle="LND Tech Europe builds proprietary AI powered by a living European Business Intelligence Engine — so you reach the companies that actually matter, in markets that change every day."
+          title="The intelligence infrastructure behind European B2B growth."
+          subtitle="We find the European companies that matter for your business — and help you reach them. Powered by a living intelligence engine that continuously maps, verifies and scores companies — not a static database."
           primaryCta={BOOK_A_CALL}
           secondaryCta={{ label: 'See what we build', href: '#solutions' }}
           // Decorative backdrop; the h1 carries the meaning, so alt is empty and

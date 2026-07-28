@@ -11,9 +11,9 @@ export const siteConfig = {
   /** Brand name used in the <title> template and JSON-LD. */
   name: 'LND Tech Europe',
   /** Short tagline for metadata descriptions and Organization JSON-LD. */
-  tagline: 'The AI infrastructure behind European B2B growth',
+  tagline: 'The intelligence infrastructure behind European B2B growth',
   description:
-    'Proprietary AI powered by a living European Business Intelligence Engine — so you reach the companies that actually matter, in markets that change every day.',
+    'We find the European companies that matter for your business — and help you reach them, powered by a living intelligence engine, not a static database.',
   /** Absolute base URL. Used for metadataBase, canonical URLs, sitemap, OG. */
   url: 'https://lndeurope.com',
   /** BCP-47 locale for <html lang> and og:locale. */
