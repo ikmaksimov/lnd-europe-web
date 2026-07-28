@@ -142,6 +142,22 @@
 }
 /* trencadis:css:end */
 
+/*
+  Client tokens — deliberately OUTSIDE the markers above, so `trencadis update`
+  still sees the library's CSS region as untouched and can refresh it.
+
+  --brand is LND's accent. It gets its own name rather than hijacking --accent,
+  which is a SURFACE token: bg-accent paints the hero badge and pairs with
+  --accent-foreground, so recolouring it would repaint chips, not icons.
+*/
+:root {
+  --brand: #298dff; /* rgb(41, 141, 255) */
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

@@ -94,34 +94,34 @@ const SOLUTIONS = [
     title: 'European Market Entry',
     description:
       'Enter new markets with a verified, prioritized map of the companies that matter.',
-    icon: <Globe size={40} />,
+    icon: <Globe size={40} className="text-brand" />,
   },
   {
     title: 'B2B Demand Generation',
     description: 'Turn intelligence into qualified, multilingual demand across Europe.',
-    icon: <TrendUp size={40} />,
+    icon: <TrendUp size={40} className="text-brand" />,
   },
   {
     title: 'Buyer Acquisition',
     description: 'Find and reach the right buyers, not just more contacts.',
-    icon: <Target size={40} />,
+    icon: <Target size={40} className="text-brand" />,
   },
   {
     title: 'Exhibitor Recruitment',
     description:
       'Fill your floor with relevant exhibitors, backed by 10+ years in the exhibition industry.',
-    icon: <Tent size={40} />,
+    icon: <Tent size={40} className="text-brand" />,
   },
   {
     title: 'Investment Promotion',
     description:
       "Connect IPAs and regions with the investors and companies they're built to attract.",
-    icon: <Bank size={40} />,
+    icon: <Bank size={40} className="text-brand" />,
   },
   {
     title: 'Strategic Partnerships',
     description: 'Identify and open the partnerships that move your business forward.',
-    icon: <LinkIcon size={40} />,
+    icon: <LinkIcon size={40} className="text-brand" />,
   },
 ];
 
@@ -156,37 +156,37 @@ const INDUSTRIES = [
     title: 'International Exhibition Organizers',
     description:
       'Fill your floor with relevant exhibitors and buyers, backed by 10+ years in the exhibition industry.',
-    icon: <Tent size={40} />,
+    icon: <Tent size={40} className="text-brand" />,
   },
   {
     title: 'IPAs & Economic Development Agencies',
     description:
       'Reach the investors and companies your region is built to attract, market by market.',
-    icon: <Bank size={40} />,
+    icon: <Bank size={40} className="text-brand" />,
   },
   {
     title: 'Trade Promotion Organizations',
     description:
       'Connect national exporters with verified buyers and partners across Europe.',
-    icon: <Package size={40} />,
+    icon: <Package size={40} className="text-brand" />,
   },
   {
     title: 'B2B Technology Companies',
     description:
       'Enter new European markets with a prioritized map of the accounts that matter.',
-    icon: <Cpu size={40} />,
+    icon: <Cpu size={40} className="text-brand" />,
   },
   {
     title: 'Manufacturers & Exporters',
     description:
       'Find distributors, buyers and partners well beyond your home market.',
-    icon: <Factory size={40} />,
+    icon: <Factory size={40} className="text-brand" />,
   },
   {
     title: 'International Scale-ups',
     description:
       'Turn intelligence into qualified, multilingual pipeline as you expand across Europe.',
-    icon: <Rocket size={40} />,
+    icon: <Rocket size={40} className="text-brand" />,
   },
 ];
 
