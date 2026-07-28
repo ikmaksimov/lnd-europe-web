@@ -9,18 +9,16 @@ import { Features03 } from '@/blocks/features/features-03/features-03';
 import { Steps01 } from '@/blocks/steps/steps-01/steps-01';
 import { Cta02 } from '@/blocks/cta/cta-02/cta-02';
 import { Footer02 } from '@/blocks/footer/footer-02/footer-02';
+import { Clock, Cpu, Globe } from '@/lib/icons';
 import {
-  ClockIcon,
-  CpuIcon,
-  FactoryIcon,
-  GlobeIcon,
-  LandmarkIcon,
-  LinkIcon,
-  PackageIcon,
-  RocketIcon,
-  TargetIcon,
-  TentIcon,
-  TrendingUpIcon,
+  Bank,
+  Factory,
+  Link as LinkIcon,
+  Package,
+  Rocket,
+  Target,
+  Tent,
+  TrendUp,
 } from '@/components/icons';
 
 const SLOGAN = 'Light the path. Land the deal.';
@@ -78,9 +76,9 @@ const NAV_ITEMS = [
 ];
 
 const HERO_STATS = [
-  { label: '10+ years in European B2B', icon: <ClockIcon size={20} /> },
-  { label: 'In-house AI engine', icon: <CpuIcon size={20} /> },
-  { label: 'Pan-European company intelligence', icon: <GlobeIcon size={20} /> },
+  { label: '10+ years in European B2B', icon: <Clock size={20} /> },
+  { label: 'In-house AI engine', icon: <Cpu size={20} /> },
+  { label: 'Pan-European company intelligence', icon: <Globe size={20} /> },
 ];
 
 const SOLUTIONS = [
@@ -88,34 +86,34 @@ const SOLUTIONS = [
     title: 'European Market Entry',
     description:
       'Enter new markets with a verified, prioritized map of the companies that matter.',
-    icon: <GlobeIcon size={40} className="h-10 w-10" />,
+    icon: <Globe size={40} />,
   },
   {
     title: 'B2B Demand Generation',
     description: 'Turn intelligence into qualified, multilingual demand across Europe.',
-    icon: <TrendingUpIcon size={40} className="h-10 w-10" />,
+    icon: <TrendUp size={40} />,
   },
   {
     title: 'Buyer Acquisition',
     description: 'Find and reach the right buyers, not just more contacts.',
-    icon: <TargetIcon size={40} className="h-10 w-10" />,
+    icon: <Target size={40} />,
   },
   {
     title: 'Exhibitor Recruitment',
     description:
       'Fill your floor with relevant exhibitors, backed by 10+ years in the exhibition industry.',
-    icon: <TentIcon size={40} className="h-10 w-10" />,
+    icon: <Tent size={40} />,
   },
   {
     title: 'Investment Promotion',
     description:
       "Connect IPAs and regions with the investors and companies they're built to attract.",
-    icon: <LandmarkIcon size={40} className="h-10 w-10" />,
+    icon: <Bank size={40} />,
   },
   {
     title: 'Strategic Partnerships',
     description: 'Identify and open the partnerships that move your business forward.',
-    icon: <LinkIcon size={40} className="h-10 w-10" />,
+    icon: <LinkIcon size={40} />,
   },
 ];
 
@@ -150,37 +148,37 @@ const INDUSTRIES = [
     title: 'International Exhibition Organizers',
     description:
       'Fill your floor with relevant exhibitors and buyers, backed by 10+ years in the exhibition industry.',
-    icon: <TentIcon size={40} className="h-10 w-10" />,
+    icon: <Tent size={40} />,
   },
   {
     title: 'IPAs & Economic Development Agencies',
     description:
       'Reach the investors and companies your region is built to attract, market by market.',
-    icon: <LandmarkIcon size={40} className="h-10 w-10" />,
+    icon: <Bank size={40} />,
   },
   {
     title: 'Trade Promotion Organizations',
     description:
       'Connect national exporters with verified buyers and partners across Europe.',
-    icon: <PackageIcon size={40} className="h-10 w-10" />,
+    icon: <Package size={40} />,
   },
   {
     title: 'B2B Technology Companies',
     description:
       'Enter new European markets with a prioritized map of the accounts that matter.',
-    icon: <CpuIcon size={40} className="h-10 w-10" />,
+    icon: <Cpu size={40} />,
   },
   {
     title: 'Manufacturers & Exporters',
     description:
       'Find distributors, buyers and partners well beyond your home market.',
-    icon: <FactoryIcon size={40} className="h-10 w-10" />,
+    icon: <Factory size={40} />,
   },
   {
     title: 'International Scale-ups',
     description:
       'Turn intelligence into qualified, multilingual pipeline as you expand across Europe.',
-    icon: <RocketIcon size={40} className="h-10 w-10" />,
+    icon: <Rocket size={40} />,
   },
 ];
 
@@ -278,6 +276,9 @@ export default function Home() {
 
         <div id="contact" className="scroll-mt-16">
           <Cta02
+            // The brand wordmark replaces the library's placeholder tile mark.
+            // The block's badge is aria-hidden, so the image is decorative here.
+            icon={<Image src="/logo.png" alt="" width={44} height={26} />}
             title="Get started with LND Tech Europe."
             subtitle="Tell us your market and your goals — we'll show you the European companies that matter most and how we will reach them."
             primaryCta={BOOK_A_CALL}
