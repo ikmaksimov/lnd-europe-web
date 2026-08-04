@@ -173,8 +173,85 @@
   no JavaScript, or under prefers-reduced-motion, the section renders as if the
   animation had already played. Scripts only ever lower these values.
 */
+/*
+  The hero runs on its OWN scoped palette rather than the neutral dark theme:
+  theme-dark is a warm near-black, which turns the aurora to mud. These six
+  values are the only place the hero's blue depth is declared — the component
+  itself still names nothing but tokens.
+*/
 .hero-blur {
   --hero-progress: 1;
+
+  --background: #0d1332;
+  --surface: #141c46;
+  --foreground: #ffffff;
+  --muted: #a9b4d8;
+  --border: #2b3566;
+
+  /* The three aurora blobs. */
+  --tint-1: #0e4bff;
+  --tint-2: #784cff;
+  --tint-3: #2affc2;
+
+  /* The light ground of the page BELOW, which the hero fades into. Declared
+     literally because a var() would resolve inside this scope, not outside. */
+  --page-ground: #ffffff;
+}
+
+.hero-aurora {
+  position: absolute;
+  inset: -10%;
+  filter: blur(20px);
+  transform: scale(calc(1 + var(--hero-progress) * 0.15));
+}
+.hero-aurora span {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  animation: hero-drift 12s ease-in-out infinite alternate;
+}
+.hero-aurora span:nth-child(1) {
+  width: 75vw;
+  height: 75vw;
+  left: -14%;
+  top: 3%;
+  background: radial-gradient(circle, var(--tint-1) 0, transparent 62%);
+}
+.hero-aurora span:nth-child(2) {
+  width: 70vw;
+  height: 70vw;
+  right: -18%;
+  top: 14%;
+  background: radial-gradient(circle, var(--tint-2) 0, transparent 64%);
+  animation-delay: -4s;
+}
+.hero-aurora span:nth-child(3) {
+  width: 58vw;
+  height: 58vw;
+  left: 20%;
+  bottom: -35%;
+  background: radial-gradient(circle, var(--tint-3) 0, transparent 62%);
+  animation-delay: -8s;
+  opacity: 0.55;
+}
+@keyframes hero-drift {
+  to {
+    transform: translate3d(8%, -5%, 0) scale(1.14);
+  }
+}
+
+/* Darkens the top for the header, then hands off to the page's light ground. */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgb(7 10 25 / 0.6),
+    transparent 28%,
+    transparent 62%,
+    var(--page-ground) 100%
+  );
 }
 .hero-blur-word {
   opacity: 0.62;

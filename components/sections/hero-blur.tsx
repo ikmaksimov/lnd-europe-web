@@ -73,25 +73,36 @@ export function HeroBlur({
     const section = scope.current;
     if (!section) return;
 
-    let frame = 0;
     const update = () => {
-      frame = 0;
       const rect = section.getBoundingClientRect();
       const runway = Math.max(1, rect.height - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / runway));
       section.style.setProperty('--hero-progress', progress.toFixed(3));
     };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+
+    // A frame loop rather than a scroll listener: this page runs Lenis, so the
+    // scroll position is interpolated between events. Reading it every frame —
+    // and only while the section is on screen — keeps the effect exact whoever
+    // is driving the page.
+    let frame = 0;
+    let running = false;
+    const tick = () => {
+      update();
+      if (running) frame = requestAnimationFrame(tick);
     };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting === running) return;
+      running = entry.isIntersecting;
+      if (running) frame = requestAnimationFrame(tick);
+      else cancelAnimationFrame(frame);
+    });
 
     update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    observer.observe(section);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      if (frame) cancelAnimationFrame(frame);
+      running = false;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
     };
   }, [animationLevel]);
 
@@ -99,12 +110,20 @@ export function HeroBlur({
     <section
       ref={scope}
       aria-labelledby={titleId}
-      // The runway: 160vh of section for 100vh of sticky frame.
-      className="hero-blur theme-dark bg-background relative h-[160svh]"
+      // The runway: 160vh of section for 100vh of sticky frame. The section
+      // carries its own palette (globals.css), so text-foreground resolves to
+      // the hero's white here rather than inheriting the body's dark colour.
+      className="hero-blur bg-background text-foreground relative h-[160svh]"
     >
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center overflow-hidden px-4 sm:px-6">
-        {/* Token-driven glow, the calm ground the type sits on. */}
-        <div aria-hidden="true" className="bg-mesh absolute inset-0 opacity-40" />
+        {/* Drifting glow built from the scope's tint tokens, then a veil that
+            darkens the top for the header and fades into the page below. */}
+        <div aria-hidden="true" className="hero-aurora">
+          <span />
+          <span />
+          <span />
+        </div>
+        <div aria-hidden="true" className="hero-veil" />
 
         <div className="relative z-10 flex w-full flex-col items-center text-center">
           {eyebrow ? (

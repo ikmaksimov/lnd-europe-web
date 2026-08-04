@@ -59,9 +59,7 @@ export function StatementHighlight({
       section.querySelectorAll<HTMLElement>('[data-highlight]')
     );
 
-    let frame = 0;
     const update = () => {
-      frame = 0;
       const rect = section.getBoundingClientRect();
       const runway = Math.max(1, rect.height - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / runway));
@@ -75,17 +73,28 @@ export function StatementHighlight({
         phrase.style.setProperty('--fill-progress', fill.toFixed(3));
       }
     };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+    // A frame loop rather than a scroll listener, and only while the section is
+    // on screen: Lenis interpolates the scroll position between events, so
+    // reading it per frame is what keeps the phrases in step with the page.
+    let frame = 0;
+    let running = false;
+    const tick = () => {
+      update();
+      if (running) frame = requestAnimationFrame(tick);
     };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting === running) return;
+      running = entry.isIntersecting;
+      if (running) frame = requestAnimationFrame(tick);
+      else cancelAnimationFrame(frame);
+    });
 
     update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    observer.observe(section);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      if (frame) cancelAnimationFrame(frame);
+      running = false;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
     };
   }, [animationLevel]);
 
