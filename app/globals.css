@@ -151,11 +151,104 @@
   --accent-foreground, so recolouring it would repaint chips, not icons.
 */
 :root {
-  --brand: #298dff; /* rgb(41, 141, 255) */
+  --brand: #4d7cff; /* the accent blue carried over from the reference design */
 }
 
 @theme inline {
   --color-brand: var(--brand);
+  /* Geist for both roles, overriding the library's Manrope/Inter mapping. A
+     later @theme wins, so the region above stays untouched and updatable. */
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/*
+  Client sections — the scroll-driven treatments used by components/sections/.
+  Only the parts Tailwind cannot express live here: custom properties a script
+  animates, and the gradient text mask. Everything is token-driven, so these
+  can be lifted into the library as blocks without edits.
+
+  Both default to their FINISHED state (progress = 1). That is deliberate: with
+  no JavaScript, or under prefers-reduced-motion, the section renders as if the
+  animation had already played. Scripts only ever lower these values.
+*/
+.hero-blur {
+  --hero-progress: 1;
+}
+.hero-blur-word {
+  opacity: 0.62;
+  filter: blur(calc(10px - var(--hero-progress) * 8px));
+}
+.hero-blur-word-left {
+  transform: translateX(calc(var(--hero-progress) * -4vw));
+}
+.hero-blur-word-right {
+  transform: translateX(calc(var(--hero-progress) * 4vw));
+}
+
+.scroll-highlight {
+  --icon-progress: 1;
+  --fill-progress: 1;
+  display: inline-flex;
+  align-items: stretch;
+  vertical-align: -0.08em;
+  white-space: nowrap;
+  height: 0.95em;
+}
+/* The icon chip grows from zero width, so the phrase reads normally before it. */
+.scroll-highlight-icon {
+  display: block;
+  width: calc(var(--icon-progress) * 1.02em);
+  height: 0.95em;
+  overflow: hidden;
+  background-color: var(--brand);
+  color: var(--primary-foreground);
+}
+.scroll-highlight-icon svg {
+  display: block;
+  width: 0.95em;
+  min-width: 0.95em;
+  height: 0.95em;
+  padding: 0.11em;
+}
+.scroll-highlight-text {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  height: 0.95em;
+  padding: 0 0.08em;
+}
+.scroll-highlight-fill {
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 0;
+  width: calc(var(--fill-progress) * 100%);
+  background-color: var(--foreground);
+}
+/* The copy is painted by a hard-stop gradient so it flips to the inverse colour
+   exactly where the fill edge is — one element, no duplicated text. */
+.scroll-highlight-copy {
+  position: relative;
+  display: block;
+  line-height: 0.95;
+  color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--background) 0,
+    var(--background) calc(var(--fill-progress) * 100%),
+    var(--foreground) calc(var(--fill-progress) * 100%),
+    var(--foreground) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blur-word-left,
+  .hero-blur-word-right {
+    transform: none;
+  }
 }
 
 @layer base {

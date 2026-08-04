@@ -1,19 +1,22 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Manrope, Inter } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 import { siteConfig } from '@/site.config';
 import { LenisProvider } from '@/lib/animations/lenis-provider';
 import './globals.css';
 
 // Self-hosted at build time by next/font, display: swap (SEO-BASELINE §5).
-const manrope = Manrope({
+// Geist carries both roles; globals.css points --font-display and --font-body
+// at it, so the library's Manrope/Inter mapping is overridden without touching
+// the trencadis:css region.
+const geistSans = Geist({
   subsets: ['latin'],
-  variable: '--font-manrope',
+  variable: '--font-geist-sans',
   display: 'swap',
 });
-const inter = Inter({
+const geistMono = Geist_Mono({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-geist-mono',
   display: 'swap',
 });
 
@@ -46,7 +49,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang={siteConfig.locale} className={`${manrope.variable} ${inter.variable}`}>
+    <html lang={siteConfig.locale} className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="bg-background text-foreground min-h-screen antialiased">
         {siteConfig.smoothScroll ? <LenisProvider>{children}</LenisProvider> : children}
       </body>

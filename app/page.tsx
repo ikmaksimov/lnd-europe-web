@@ -3,16 +3,24 @@ import Image from 'next/image';
 import { JsonLd } from '@/components/json-ld';
 import { siteConfig } from '@/site.config';
 import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
-import { Hero02 } from '@/blocks/hero/hero-02/hero-02';
-import { Statement01 } from '@/blocks/statement/statement-01/statement-01';
+// The block hero and statement are PARKED, not gone — the page now opens with
+// the new treatments below. Re-enable by restoring these imports, the
+// HERO_STATS const and the two JSX blocks further down (all kept in place), and
+// adding Clock back to the @/lib/icons import.
+// import { Hero02 } from '@/blocks/hero/hero-02/hero-02';
+// import { Statement01 } from '@/blocks/statement/statement-01/statement-01';
+import { HeroBlur } from '@/components/sections/hero-blur';
+import { StatementHighlight } from '@/components/sections/statement-highlight';
 import { Features03 } from '@/blocks/features/features-03/features-03';
 import { Steps01 } from '@/blocks/steps/steps-01/steps-01';
 import { Cta02 } from '@/blocks/cta/cta-02/cta-02';
 import { Footer02 } from '@/blocks/footer/footer-02/footer-02';
-import { Clock, Cpu, Globe } from '@/lib/icons';
+import { Cpu, Globe, SealCheck } from '@/lib/icons';
 import {
   Bank,
+  Broadcast,
   Factory,
+  Funnel,
   Link as LinkIcon,
   Package,
   Rocket,
@@ -83,10 +91,38 @@ const NAV_ITEMS = [
   },
 ];
 
-const HERO_STATS = [
-  { label: '10+ years in European B2B', icon: <Clock size={20} /> },
-  { label: 'In-house intelligence engine', icon: <Cpu size={20} /> },
-  { label: 'Pan-European coverage', icon: <Globe size={20} /> },
+// Parked with the block hero above — kept so restoring it is one uncomment.
+// const HERO_STATS = [
+//   { label: '10+ years in European B2B', icon: <Clock size={20} /> },
+//   { label: 'In-house intelligence engine', icon: <Cpu size={20} /> },
+//   { label: 'Pan-European coverage', icon: <Globe size={20} /> },
+// ];
+
+/**
+ * The "why" statement, split into prose and the three phrases that light up.
+ * `start` is where each phrase begins in the section's scroll runway (0–1); the
+ * icons trace the actual sequence of the work: scan → verify → convert.
+ */
+const WHY_STATEMENT = [
+  'European markets move every day. Static databases do not. Our living intelligence engine continuously ',
+  {
+    text: 'maps the companies that matter',
+    icon: <Broadcast />,
+    start: 0.08,
+  },
+  ', ',
+  {
+    text: 'verifies and prioritizes every account',
+    icon: <SealCheck />,
+    start: 0.32,
+  },
+  ', and ',
+  {
+    text: 'turns live market signals into qualified pipeline',
+    icon: <Funnel />,
+    start: 0.58,
+  },
+  '.',
 ];
 
 const SOLUTIONS = [
@@ -228,32 +264,17 @@ export default function Home() {
         cta={BOOK_A_CALL}
       />
       <main>
-        <Hero02
+        <HeroBlur
           headingLevel="h1"
-          imagePriority
-          // The photo is dark almost everywhere, so the section runs on the dark
-          // token set and the type inverts with the scrim.
-          tone="dark"
-          // navbar-03 above is sticky, so the hero pulls up under it and pads the
-          // content back down by --header-height.
-          underHeader
-          badge="10+ years in European B2B"
-          eyebrow="AI growth intelligence · Europe"
-          title="The intelligence infrastructure behind European B2B growth."
-          subtitle="We find the European companies that matter for your business — and help you reach them. Powered by a living intelligence engine that continuously maps, verifies and scores companies — not a static database."
-          primaryCta={BOOK_A_CALL}
-          secondaryCta={{ label: 'See what we build', href: '#solutions' }}
-          // Decorative backdrop; the h1 carries the meaning, so alt is empty and
-          // the image stays out of the accessibility tree.
-          background={{ src: '/hero.jpg', alt: '' }}
-          items={HERO_STATS}
+          eyebrow="European B2B growth intelligence"
+          words={{ left: 'SEE', focus: 'EUROPE', right: 'CLEARLY.' }}
+          subtitle="We continuously map, verify and prioritize the European companies that matter — then turn that intelligence into qualified demand."
+          primaryCta={{ label: 'Map your market', href: BOOK_A_CALL.href }}
+          secondaryCta={{ label: 'Explore the engine', href: '#how-it-works' }}
         />
 
         <div id="why" className="scroll-mt-16">
-          <Statement01
-            eyebrow="Why LND Tech Europe"
-            text="Most organizations still make strategic decisions on static data — in markets that move every day. We built a living intelligence network instead of a database: every company profile is continuously mapped, verified, enriched and scored, so your growth always runs on what's true now."
-          />
+          <StatementHighlight eyebrow="Why LND Europe" parts={WHY_STATEMENT} />
         </div>
 
         <div id="solutions" className="scroll-mt-16">
