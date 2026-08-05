@@ -22,11 +22,16 @@
 git clone https://github.com/ikmaksimov/trencadis.git
 git clone https://github.com/ikmaksimov/lnd-europe-web.git
 cd lnd-europe-web
+git checkout redesign
 npm install
 npm run dev
 ```
 
 Дальше сайт открывается на `http://localhost:3000`.
+
+**Про ветки.** `main` — это то, что стоит на продакшене `lndeurope.com`.
+Новый дизайн двух первых секций живёт в ветке **`redesign`** и в прод пока не
+уехал. Работай в ней; слить в `main` — отдельное решение, оно запускает деплой.
 
 Путь к библиотеке важен: CLI вызывается по абсолютному пути, например
 `node <путь-к-trencadis>/cli/trencadis.mjs status --dir .`
