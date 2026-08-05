@@ -1,15 +1,15 @@
 'use client';
 
-import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type CSSProperties, type ReactNode } from 'react';
 import { prefersReducedMotion } from '@/lib/effects';
 
-/** A run of the paragraph: plain prose, or a phrase that lights up on scroll. */
+/** A run of the statement: plain prose, or a phrase that earns an icon chip. */
 export type StatementPart =
   | string
   | {
       text: string;
       icon: ReactNode;
-      /** Where in the section's scroll runway this phrase starts, 0–1. */
+      /** Where in the section's scroll runway the chip opens, 0–1. */
       start: number;
     };
 
@@ -21,24 +21,30 @@ export interface StatementHighlightProps {
   animationLevel?: 'none' | 'subtle';
 }
 
-const isHighlight = (part: StatementPart): part is Exclude<StatementPart, string> =>
+const isChip = (part: StatementPart): part is Exclude<StatementPart, string> =>
   typeof part !== 'string';
 
 /**
- * statement-highlight — a large centred statement whose key phrases fill in as
- * the section scrolls: an icon chip opens on the left of each phrase, then the
- * phrase itself inverts left-to-right.
+ * statement-highlight — a large centred statement that reads itself as the
+ * section scrolls: words light in reading order behind a travelling band of the
+ * brand blue, key phrases open an icon chip when the reading head reaches them,
+ * and the whole section inverts from light to dark at the halfway mark.
  *
- * Same runway trick as hero-blur: a tall section with a sticky inner frame. One
- * scroll listener writes `--statement-progress` on the section, and each phrase
- * derives two of its own properties from it (`--icon-progress`,
- * `--fill-progress`) using its `start` offset, so the phrases light in sequence
- * rather than together.
+ * The section is taller than the viewport with a sticky inner frame; that extra
+ * height is the runway. A rAF loop, gated by an IntersectionObserver so it costs
+ * nothing off screen, writes just two properties on the section — `--play` and
+ * `--flip` — plus one per chip. Every word then derives its own colour from its
+ * index in CSS, so a forty-word paragraph still costs three style writes a frame
+ * rather than forty.
  *
- * Progressive enhancement: the CSS default is the finished state, so without
- * JavaScript — or under prefers-reduced-motion — the statement reads fully
- * highlighted. The paragraph is real text either way; the icons are decorative
- * and aria-hidden.
+ * The inversion works by redefining `--background` and `--foreground` on the
+ * section, so it reaches the ground, the type and the dim colour at once; no
+ * element names a colour of its own.
+ *
+ * Progressive enhancement: the CSS defaults are the finished state, so with no
+ * JavaScript — or under prefers-reduced-motion — the statement reads fully lit
+ * on the light ground. The paragraph is real text throughout; chips are
+ * decorative and aria-hidden.
  */
 export function StatementHighlight({
   eyebrow,
@@ -50,32 +56,72 @@ export function StatementHighlight({
   const autoId = useId();
   const labelId = `${htmlId ?? autoId}-label`;
 
+  // Flatten the parts into words carrying a running index, so the reveal runs
+  // across the whole paragraph rather than restarting at each phrase.
+  const nodes: ReactNode[] = [];
+  let wordIndex = 0;
+  parts.forEach((part, partIndex) => {
+    if (isChip(part)) {
+      nodes.push(
+        <span
+          key={`chip-${partIndex}`}
+          data-chip
+          data-start={part.start}
+          aria-hidden="true"
+          className="statement-chip"
+        >
+          {part.icon}
+        </span>
+      );
+    }
+    const text = isChip(part) ? part.text : part;
+    text.split(/(\s+)/).forEach((token, tokenIndex) => {
+      if (!token) return;
+      if (!token.trim()) {
+        nodes.push(token);
+        return;
+      }
+      nodes.push(
+        <span
+          key={`w-${partIndex}-${tokenIndex}`}
+          className="statement-word"
+          style={{ '--i': wordIndex } as CSSProperties}
+        >
+          {token}
+        </span>
+      );
+      wordIndex += 1;
+    });
+  });
+  const wordCount = wordIndex;
+
   useEffect(() => {
     if (animationLevel === 'none' || prefersReducedMotion()) return;
     const section = scope.current;
     if (!section) return;
 
-    const phrases = Array.from(
-      section.querySelectorAll<HTMLElement>('[data-highlight]')
-    );
+    const chips = Array.from(section.querySelectorAll<HTMLElement>('[data-chip]'));
 
     const update = () => {
       const rect = section.getBoundingClientRect();
       const runway = Math.max(1, rect.height - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / runway));
 
-      for (const phrase of phrases) {
-        const start = Number(phrase.dataset.start ?? 0);
-        // The chip opens quickly, then the fill sweeps just behind it.
-        const icon = Math.min(1, Math.max(0, (progress - start) / 0.1));
-        const fill = Math.min(1, Math.max(0, (progress - start - 0.055) / 0.2));
-        phrase.style.setProperty('--icon-progress', icon.toFixed(3));
-        phrase.style.setProperty('--fill-progress', fill.toFixed(3));
+      section.style.setProperty('--play', progress.toFixed(4));
+      // The ground turns over the middle fifth of the runway.
+      const flip = Math.min(1, Math.max(0, (progress - 0.42) / 0.16));
+      section.style.setProperty('--flip', flip.toFixed(4));
+
+      for (const chip of chips) {
+        const start = Number(chip.dataset.start ?? 0);
+        const open = Math.min(1, Math.max(0, (progress - start) / 0.08));
+        chip.style.setProperty('--icon-progress', open.toFixed(3));
       }
     };
-    // A frame loop rather than a scroll listener, and only while the section is
-    // on screen: Lenis interpolates the scroll position between events, so
-    // reading it per frame is what keeps the phrases in step with the page.
+
+    // A frame loop rather than a scroll listener: this page runs Lenis, which
+    // interpolates the scroll position between events, so per-frame reads are
+    // what keep the reveal in step with the page.
     let frame = 0;
     let running = false;
     const tick = () => {
@@ -103,40 +149,23 @@ export function StatementHighlight({
       ref={scope}
       aria-labelledby={eyebrow ? labelId : undefined}
       aria-label={eyebrow ? undefined : 'Statement'}
-      className="bg-background relative h-[190svh]"
+      className="statement-scroll relative h-[190svh]"
+      style={{ '--count': wordCount } as CSSProperties}
     >
-      <div className="sticky top-0 flex min-h-svh flex-col items-center justify-center px-4 py-24 sm:px-6">
+      <div className="bg-background sticky top-0 flex min-h-svh flex-col items-center justify-center px-4 py-24 transition-none sm:px-6">
         <div className="mx-auto w-full max-w-5xl text-center">
           {eyebrow ? (
             <p
               id={labelId}
-              className="text-muted font-mono mb-10 text-[0.65rem] tracking-[0.14em] uppercase sm:text-xs"
+              className="font-mono mb-10 text-[0.65rem] tracking-[0.14em] uppercase sm:text-xs"
+              style={{ color: 'var(--dim)' }}
             >
               {eyebrow}
             </p>
           ) : null}
 
-          <p className="font-display text-foreground text-3xl leading-[1.15] font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
-            {parts.map((part, i) =>
-              isHighlight(part) ? (
-                <span
-                  key={`${part.text}-${i}`}
-                  data-highlight
-                  data-start={part.start}
-                  className="scroll-highlight"
-                >
-                  <span aria-hidden="true" className="scroll-highlight-icon">
-                    {part.icon}
-                  </span>
-                  <span className="scroll-highlight-text">
-                    <span aria-hidden="true" className="scroll-highlight-fill" />
-                    <span className="scroll-highlight-copy">{part.text}</span>
-                  </span>
-                </span>
-              ) : (
-                <span key={`text-${i}`}>{part}</span>
-              )
-            )}
+          <p className="font-display text-3xl leading-[1.2] font-medium tracking-tight text-balance sm:text-4xl lg:text-5xl">
+            {nodes}
           </p>
         </div>
       </div>
