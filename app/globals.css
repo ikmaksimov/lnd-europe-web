@@ -151,7 +151,7 @@
   --accent-foreground, so recolouring it would repaint chips, not icons.
 */
 :root {
-  --brand: #4d7cff; /* the accent blue carried over from the reference design */
+  --brand: #298dff; /* sui.io's primary blue, adopted as LND's accent */
 }
 
 @theme inline {
@@ -182,14 +182,14 @@
 .hero-blur {
   --hero-progress: 1;
 
-  --background: #0d1332;
-  --surface: #141c46;
+  --background: #0d1e32;
+  --surface: #142b46;
   --foreground: #ffffff;
-  --muted: #a9b4d8;
-  --border: #2b3566;
+  --muted: #a9bfd8;
+  --border: #2b4766;
 
   /* The three aurora blobs. */
-  --tint-1: #0e4bff;
+  --tint-1: #0e7fff;
   --tint-2: #784cff;
   --tint-3: #2affc2;
 
