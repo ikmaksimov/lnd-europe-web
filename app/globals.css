@@ -174,14 +174,19 @@
   animation had already played. Scripts only ever lower these values.
 */
 /*
-  The hero runs on its OWN scoped palette rather than the neutral dark theme:
-  theme-dark is a warm near-black, which turns the aurora to mud. These six
-  values are the only place the hero's blue depth is declared — the component
-  itself still names nothing but tokens.
-*/
-.hero-blur {
-  --hero-progress: 1;
+  The DEEP scope — a scoped palette rather than the neutral dark theme, because
+  theme-dark is a warm near-black, which turns the hero's aurora to mud. These
+  eight values are the only place the blue depth is declared; the components
+  that sit in the scope still name nothing but tokens.
 
+  Two selectors share the one declaration on purpose. engine-scene opts in
+  because --brand scores 5.08 against #0d1e32 and only 3.31 against the white
+  page, and a diagram made of hairlines is exactly where that gap decides
+  whether a line reads. A selector list keeps the two in step; a second copy of
+  the values would not.
+*/
+.hero-blur,
+.scene-ground-deep {
   --background: #0d1e32;
   --surface: #142b46;
   --foreground: #ffffff;
@@ -192,6 +197,10 @@
   --tint-1: #0e7fff;
   --tint-2: #784cff;
   --tint-3: #2affc2;
+}
+
+.hero-blur {
+  --hero-progress: 1;
 
   /* The light ground of the page BELOW, which the hero fades into. Declared
      literally because a var() would resolve inside this scope, not outside. */
@@ -333,6 +342,175 @@
   min-width: 0.95em;
   height: 0.95em;
   padding: 0.11em;
+}
+
+/*
+  engine-scene — three stacked isometric planes assembling on scroll.
+  --------------------------------------------------------------------------
+  The component writes ONE property, --scene-progress, and everything below is
+  derived from it. Geometry never moves: only opacity, transform and
+  stroke-dashoffset, which is why a ~250-element diagram stays cheap.
+
+  THE STORYBOARD lives in the six --stage-* lines. Each is "how far through its
+  own window the runway has come", 0 → 1, so retiming the assembly means editing
+  a start and a length — nothing else in this file needs to change.
+
+  Within a stage, elements stagger by --d (0 near, 1 far), set inline from grid
+  depth. The 1.6/0.6-style pair in each --t is "overshoot / spread": the stage
+  runs a little past 1 so the last element still finishes exactly at the end of
+  the window, and the divisor is how much of the window one element takes.
+*/
+.engine-scene {
+  --scene-progress: 1;
+
+  --stage-ground: clamp(0, calc(var(--scene-progress) / 0.16), 1);
+  --stage-nodes: clamp(0, calc((var(--scene-progress) - 0.1) / 0.22), 1);
+  --stage-links: clamp(0, calc((var(--scene-progress) - 0.3) / 0.24), 1);
+  --stage-lit: clamp(0, calc((var(--scene-progress) - 0.48) / 0.16), 1);
+  --stage-crown: clamp(0, calc((var(--scene-progress) - 0.62) / 0.2), 1);
+  --stage-score: clamp(0, calc((var(--scene-progress) - 0.8) / 0.16), 1);
+}
+
+/* currentColor is the quiet ink of the diagram; the lit parts name --brand. */
+.scene-svg {
+  color: var(--muted);
+}
+
+.scene-svg line,
+.scene-svg polygon {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* A group that scales must scale about itself, not about the SVG origin. */
+.scene-plane-ground,
+.scene-band,
+.scene-node-mid,
+.scene-cube,
+.scene-score {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/*
+  The quiet ink is currentColor — the scope's --muted — thinned with
+  stroke-opacity rather than drawn in --border. Measured: --border is #2b4766 on
+  a #0d1e32 ground, 1.6:1, and a hairline at that ratio disappears the moment
+  the plane is anything but fully opaque. --muted gives the same greys back
+  under control, and still inverts with the theme.
+*/
+
+/* Plane outlines draw themselves in; --draw picks which stage each waits for. */
+.scene-outline {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.5;
+  stroke-width: 1.2;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: calc(var(--len) * (1 - var(--draw, 1)));
+}
+.scene-outline-ground {
+  --draw: var(--stage-ground);
+}
+.scene-outline-middle {
+  --draw: var(--stage-links);
+}
+.scene-outline-crown {
+  --draw: var(--stage-crown);
+}
+
+/* 1 — the raw market. The plane settles as one, then the lattice fills.
+   It never goes fully transparent: the section is on screen for a viewport of
+   scrolling before its runway even starts, and an empty dark band reads as a
+   broken block. The floor is also the right semantics — the undifferentiated
+   market is what exists before the engine touches it. */
+.scene-plane-ground {
+  opacity: calc(0.55 + var(--stage-ground) * 0.45);
+  transform: translate(0, calc((1 - var(--stage-ground)) * 26px))
+    scale(calc(0.975 + var(--stage-ground) * 0.025));
+}
+
+.scene-grid line {
+  stroke: currentColor;
+  stroke-opacity: 0.16;
+  stroke-width: 1;
+}
+
+/* The lattice animates as seven diagonal bands, not as 121 circles: the wave
+   reads the same and the per-frame style work is a seventeenth of it. */
+.scene-band {
+  --t: clamp(0, calc((var(--stage-nodes) * 1.7 - var(--d)) / 0.7), 1);
+  opacity: var(--t);
+  transform: translate(0, calc((1 - var(--t)) * 10px));
+}
+
+.scene-node-ground {
+  fill: currentColor;
+  fill-opacity: 0.55;
+}
+
+/* 2 — plumb lines tying the planes together, so the stack reads as a funnel. */
+.scene-guide {
+  stroke: currentColor;
+  stroke-opacity: 0.45;
+  stroke-width: 1;
+  stroke-dasharray: 2 6;
+  opacity: calc(var(--stage-lit) * 0.85);
+}
+
+/* 3 — verification. Links draw first, then the nodes on them light. */
+.scene-edge {
+  --t: clamp(0, calc((var(--stage-links) * 1.8 - var(--d)) / 0.8), 1);
+  stroke: var(--brand);
+  stroke-width: 1.4;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: calc(var(--len) * (1 - var(--t)));
+  opacity: calc(0.35 + var(--t) * 0.65);
+}
+
+.scene-node-mid {
+  --t: clamp(0, calc((var(--stage-lit) * 1.6 - var(--d)) / 0.6), 1);
+  fill: var(--brand);
+  /* Present while the links draw, full only once lit — brightness, not a hue
+     change, so nothing per-frame has to mix a colour. The base has to be high
+     enough that the links are visibly landing ON nodes while they draw. */
+  opacity: calc(var(--stage-links) * (0.45 + var(--t) * 0.55));
+  transform: scale(calc(0.5 + var(--t) * 0.5));
+}
+
+/* 4 — prioritisation. The boxes rise out of the network below them. */
+.scene-cube {
+  --t: clamp(0, calc((var(--stage-crown) * 1.6 - var(--d)) / 0.6), 1);
+  opacity: var(--t);
+  transform: translate(0, calc((1 - var(--t)) * 26px)) scale(calc(0.7 + var(--t) * 0.3));
+}
+.scene-cube line {
+  stroke: var(--brand);
+  stroke-width: 1.6;
+}
+.scene-cube-face {
+  fill: var(--brand);
+  fill-opacity: 0.16;
+  stroke: none;
+}
+
+.scene-score {
+  --t: clamp(0, calc((var(--stage-score) * 1.5 - var(--d)) / 0.5), 1);
+  fill: var(--foreground);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-anchor: middle;
+  dominant-baseline: central;
+  opacity: var(--t);
+  transform: translate(0, calc((1 - var(--t)) * 8px));
+}
+
+/* Reduced density on small screens — the SAME scene, every other lattice row
+   and column dropped, so there is one composition to maintain rather than two. */
+@media (max-width: 40rem) {
+  .scene-fine {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
