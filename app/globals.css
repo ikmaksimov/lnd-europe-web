@@ -40,6 +40,8 @@
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
 
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
@@ -120,6 +122,220 @@
   &:hover,
   &:focus-visible {
     background-size: 100% 1px;
+  }
+}
+
+/* The transient paint edge used by textScrub's opt-in gradient-frontier mode.
+   The foreground and sheen stay live CSS variables, so a scoped theme flip
+   recolours an already-split statement without GSAP reading or caching values. */
+.scrub-frontier {
+  color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--foreground),
+    var(--tint-3),
+    var(--foreground)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/* statement-06 — a CSS-derived reading wave. The scene defaults to finished
+   (`--play: 1`) so the full paragraph survives no-JS and reduced motion. Its
+   driver writes only --play; every word derives read state (--w) and a parabolic
+   highlight flash (--blue) from static custom properties. color-mix() and
+   unitless clamp() are baseline in the browsers supported by this library. */
+.statement-wave {
+  --play: 1;
+  --dim: color-mix(in oklab, var(--foreground) 30%, var(--background));
+}
+
+.statement-wave-word {
+  --w: clamp(0, calc((var(--play) - var(--start)) / 0.08), 1);
+  --blue: calc(4 * var(--w) * (1 - var(--w)));
+  color: color-mix(
+    in oklab,
+    color-mix(in oklab, var(--dim) calc((1 - var(--w)) * 100%), var(--foreground)),
+    var(--highlight) calc(var(--blue) * 75%)
+  );
+}
+
+/* hero-04 defaults to the finished, legible focus state. Outer words remain
+   softly decorative at 2px blur; one progressVar channel spreads and sharpens
+   them. The mobile range is deliberately smaller (6px → 2px) without removing
+   the focus relationship. */
+.hero04-root {
+  --progress: 1;
+  --hero04-blur-range: 10px;
+  --hero04-spread: 2em;
+}
+.hero04-root [data-hero4-word='left'],
+.hero04-root [data-hero4-word='right'] {
+  display: inline-block;
+  opacity: calc(0.38 + var(--progress) * 0.24);
+  filter: blur(calc((1 - var(--progress)) * var(--hero04-blur-range) + 2px));
+}
+.hero04-root [data-hero4-word='left'] {
+  transform: translateX(calc((1 - var(--progress)) * var(--hero04-spread)));
+}
+.hero04-root [data-hero4-word='right'] {
+  transform: translateX(calc((var(--progress) - 1) * var(--hero04-spread)));
+}
+.hero04-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+.hero04-aurora i {
+  position: absolute;
+  width: 70vw;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  filter: blur(70px);
+  background: var(--tint-1);
+}
+.hero04-aurora i:nth-child(2) {
+  background: var(--tint-2);
+  left: 35%;
+  top: 25%;
+}
+.hero04-aurora i:nth-child(3) {
+  background: var(--tint-3);
+  left: -15%;
+  top: 45%;
+}
+.hero04-top-veil {
+  background: linear-gradient(var(--background), transparent);
+}
+.hero04-copy-veil {
+  background: color-mix(in oklab, var(--background) 78%, transparent);
+}
+.hero04-bottom-veil {
+  background: linear-gradient(transparent, var(--background));
+}
+@keyframes hero04-drift {
+  50% {
+    transform: translate3d(3%, -2%, 0);
+  }
+}
+.hero04-drift {
+  animation: hero04-drift 18s ease-in-out infinite;
+}
+@media (max-width: 767px) {
+  .hero04-root {
+    --hero04-blur-range: 4px;
+    --hero04-spread: 0px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero04-root [data-hero4-word] {
+    transform: none !important;
+  }
+  .hero04-root [data-hero4-word='left'],
+  .hero04-root [data-hero4-word='right'] {
+    filter: blur(2px);
+  }
+  .hero04-drift {
+    animation: none;
+  }
+}
+
+/* gallery-05 — the finished, native-strip state is the fallback. Enhancement
+   adds a full-bleed sticky runway; progressVar writes only --play while CSS
+   derives settle, travel and exit. The media wrapper owns scale and the nested
+   track owns X travel, preserving a single isotropic 4:3 image row. */
+.gallery-cinematic-root {
+  --gallery-stage-edge: clamp(1rem, calc((100vw - 72rem) / 2), 6rem);
+}
+.gallery-cinematic-stage {
+  overflow: hidden;
+}
+.gallery-cinematic-edge-probe {
+  width: var(--gallery-stage-edge);
+  height: 0;
+  overflow: hidden;
+}
+.gallery-cinematic-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-inline: var(--gallery-stage-edge);
+}
+.gallery-cinematic-frame {
+  width: min(96svh, calc(100vw - var(--gallery-stage-edge) * 2));
+  aspect-ratio: 4 / 3;
+}
+.gallery-cinematic-exit-tail,
+[data-gallery5-theme-trigger] {
+  display: none;
+}
+@media (min-width: 768px) {
+  .gallery-scroll-scene {
+    --play: 1;
+  }
+  .gallery-scroll-scene .gallery-cinematic-motion {
+    height: calc(100svh + var(--gallery-pin-distance) + var(--gallery-exit-distance));
+  }
+  .gallery-scroll-scene .gallery-cinematic-runway {
+    height: calc(100svh + var(--gallery-pin-distance));
+  }
+  .gallery-scroll-scene .gallery-cinematic-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+  .gallery-scroll-scene [data-gallery5-theme-trigger] {
+    position: absolute;
+    top: var(--gallery-settle-distance);
+    display: block;
+    height: 1px;
+    width: 1px;
+  }
+  .gallery-scroll-scene .gallery-cinematic-media {
+    --gallery-settle: clamp(0, calc(var(--play) / var(--gallery-settle-end)), 1);
+    --gallery-travel-progress: clamp(
+      0,
+      calc(
+        (var(--play) - var(--gallery-settle-end)) /
+          (var(--gallery-travel-end) - var(--gallery-settle-end))
+      ),
+      1
+    );
+    --gallery-exit: clamp(
+      0,
+      calc((var(--play) - var(--gallery-travel-end)) / (1 - var(--gallery-travel-end))),
+      1
+    );
+    --gallery-scale: calc(
+      0.88 + 0.12 * min(var(--gallery-settle), calc(1 - var(--gallery-exit)))
+    );
+    position: absolute;
+    top: 50%;
+    left: var(--gallery-stage-edge);
+    width: max-content;
+    transform: translate3d(0, -50%, 0) scale(var(--gallery-scale));
+    transform-origin: center center;
+    will-change: transform;
+  }
+  .gallery-scroll-scene .gallery-cinematic-edge-probe {
+    position: absolute;
+  }
+  .gallery-scroll-scene .gallery-cinematic-track {
+    width: max-content;
+    overflow: visible;
+    padding-inline: 0;
+    transform: translate3d(
+      calc(var(--gallery-travel-progress) * var(--gallery-scroll-travel)),
+      0,
+      0
+    );
+    will-change: transform;
+  }
+  .gallery-scroll-scene .gallery-cinematic-exit-tail {
+    display: block;
+    height: var(--gallery-exit-distance);
   }
 }
 

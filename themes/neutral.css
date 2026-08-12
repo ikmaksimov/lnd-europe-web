@@ -30,6 +30,10 @@
   --accent: #f5f5f4;
   --accent-foreground: #1c1917;
 
+  /* Foreground emphasis only — never repurpose the quiet accent surface. */
+  --highlight: #9f1239;
+  --highlight-foreground: #ffffff;
+
   /* Status roles. Used as text (validation messages, invalid field borders) and
      as fills; each foreground is the readable type ON that fill. */
   --danger: #b42318;
@@ -64,15 +68,19 @@
   --accent: #44403c;
   --accent-foreground: #fafaf9;
 
+  --highlight: #fda4af;
+  --highlight-foreground: #1c1917;
+
   /* On a dark surface the status roles lighten and take dark type. */
   --danger: #fda29b;
   --danger-foreground: #1c1917;
   --success: #86efac;
   --success-foreground: #1c1917;
 
-  --tint-1: #292524;
-  --tint-2: #35312e;
-  --tint-3: #44403c;
+  /* Dark tints are luminous neutral glows, never raised surface steps. */
+  --tint-1: #78909c;
+  --tint-2: #90a4ae;
+  --tint-3: #b0bec5;
 
   --radius: 0.75rem;
 }

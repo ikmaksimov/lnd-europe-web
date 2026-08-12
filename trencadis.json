@@ -4,10 +4,10 @@
   "library": {
     "name": "trencadis",
     "version": "0.1.0",
-    "commit": "b70f3490c1"
+    "commit": "55c1d0563d"
   },
   "installedAt": "2026-07-27T13:35:27.744Z",
-  "updatedAt": "2026-07-27T13:35:27.744Z",
+  "updatedAt": "2026-08-12T11:36:44.231Z",
   "blocks": {
     "cta-02": {
       "category": "cta",
@@ -57,11 +57,11 @@
       "from": {
         "name": "trencadis",
         "version": "0.1.0",
-        "commit": "b70f3490c1"
+        "commit": "55c1d0563d"
       },
       "files": {
         "blocks/navbar/navbar-03/meta.json": "sha256:629acaa69a3d5136",
-        "blocks/navbar/navbar-03/navbar-03.tsx": "sha256:8a0dd42c3da40ec6"
+        "blocks/navbar/navbar-03/navbar-03.tsx": "sha256:f7df0384be36f2c6"
       }
     },
     "statement-01": {
@@ -86,11 +86,15 @@
   },
   "sidecars": {
     "lib/animations": {
-      "provenance": "unknown",
-      "from": null,
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "55c1d0563d"
+      },
       "files": {
         "lib/animations/lenis-provider.tsx": "sha256:382a8cfe82c39bc0",
-        "lib/animations/presets.ts": "sha256:1bcef977a67e1dae",
+        "lib/animations/presets.ts": "sha256:4379c5a3a0983854",
         "lib/animations/types.ts": "sha256:f6b1654d8e2531b4",
         "lib/animations/use-block-animation.ts": "sha256:5a205357bd0ddd55"
       }
@@ -114,27 +118,40 @@
       }
     },
     "lib/icons.tsx": {
-      "provenance": "unknown",
-      "from": null,
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "55c1d0563d"
+      },
       "files": {
-        "lib/icons.tsx": "sha256:531dc5e7884a0f9e"
+        "lib/icons.tsx": "sha256:4ef906f701d056f3"
       }
     }
   },
   "themes": {
     "neutral": {
-      "provenance": "unknown",
-      "from": null,
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "55c1d0563d"
+      },
       "files": {
-        "themes/neutral.css": "sha256:51d047779f90d2cb"
+        "themes/neutral.css": "sha256:c9f2bc7787e40df9"
       }
     }
   },
   "css": {
     "path": "app/globals.css",
-    "provenance": "unknown",
-    "from": null,
-    "hash": "sha256:3ac1c21ffde231fb"
+    "provenance": "copied",
+    "from": {
+      "name": "trencadis",
+      "version": "0.1.0",
+      "commit": "55c1d0563d"
+    },
+    "hash": "sha256:afb95a1ad3b3ea61",
+    "themeImport": "../themes/neutral.css"
   },
   "adoptedAt": "2026-07-27T13:34:57.398Z",
   "adoptedWith": {

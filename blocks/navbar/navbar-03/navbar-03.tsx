@@ -30,11 +30,22 @@ type NavEntry =
   | { label: string; href: string }
   | { label: string; panel: { groups: MegaGroup[]; featured?: MegaFeatured } };
 
+type ActionCorners = 'default' | 'sharp';
+
+interface Cta {
+  label: string;
+  href: string;
+  /** Decorative leading icon; code-level only, never PageDoc content. */
+  icon?: ReactNode;
+}
+
 export interface Navbar03Props extends BlockBaseProps {
   logo?: { label: string; href: string; mark?: ReactNode };
   items?: NavEntry[];
   secondaryLink?: { label: string; href: string };
-  cta?: { label: string; href: string };
+  cta?: Cta;
+  /** Applies the same corner treatment to every CTA copy in this navbar. */
+  actionCorners?: ActionCorners;
   /**
    * Decorate the menu labels without editing this block (BLOCK-SPEC §16).
    *
@@ -157,6 +168,7 @@ export function Navbar03({
   items = DEFAULT_ITEMS,
   secondaryLink = { label: 'Owner login', href: '#' },
   cta = { label: 'Request a visit', href: '/demo#contact' },
+  actionCorners = 'default',
   renderLabel,
   htmlId,
 }: Navbar03Props) {
@@ -175,6 +187,26 @@ export function Navbar03({
   const baseId = htmlId ?? autoId;
   const overlayId = `${baseId}-overlay`;
   const panelId = (index: number) => `${baseId}-panel-${index}`;
+  const compactCtaContent = cta.icon ? (
+    <>
+      <span aria-hidden="true" className="shrink-0">
+        {cta.icon}
+      </span>
+      <span className="truncate">{cta.label}</span>
+    </>
+  ) : (
+    <span className="truncate">{cta.label}</span>
+  );
+  const overlayCtaContent = cta.icon ? (
+    <>
+      <span aria-hidden="true" className="shrink-0">
+        {cta.icon}
+      </span>
+      <span>{cta.label}</span>
+    </>
+  ) : (
+    cta.label
+  );
 
   const headerRef = useRef<HTMLElement>(null);
   const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -309,9 +341,16 @@ export function Navbar03({
             ) : null}
             <Link
               href={cta.href}
-              className="bg-primary text-primary-foreground inline-flex max-w-[42vw] min-w-0 items-center justify-center rounded-full px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90 sm:max-w-none sm:px-4"
+              className={[
+                'bg-primary text-primary-foreground inline-flex max-w-[42vw] min-w-0 items-center justify-center',
+                actionCorners === 'sharp' ? 'rounded-none' : 'rounded-full',
+                cta.icon ? 'gap-2' : null,
+                'px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90 sm:max-w-none sm:px-4',
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
-              <span className="truncate">{cta.label}</span>
+              {compactCtaContent}
             </Link>
             <button
               ref={burgerRef}
@@ -444,9 +483,16 @@ export function Navbar03({
               <Link
                 href={cta.href}
                 onClick={closeOverlay}
-                className="bg-primary text-primary-foreground inline-flex max-w-[42vw] min-w-0 items-center justify-center rounded-full px-3 py-2 text-sm font-medium sm:max-w-none sm:px-4"
+                className={[
+                  'bg-primary text-primary-foreground inline-flex max-w-[42vw] min-w-0 items-center justify-center',
+                  actionCorners === 'sharp' ? 'rounded-none' : 'rounded-full',
+                  cta.icon ? 'gap-2' : null,
+                  'px-3 py-2 text-sm font-medium sm:max-w-none sm:px-4',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
               >
-                <span className="truncate">{cta.label}</span>
+                {compactCtaContent}
               </Link>
               <button
                 ref={closeRef}
@@ -553,9 +599,13 @@ export function Navbar03({
             <Link
               href={cta.href}
               onClick={closeOverlay}
-              className="bg-primary text-primary-foreground block rounded-full px-5 py-3 text-center text-base font-medium"
+              className={
+                cta.icon
+                  ? `bg-primary text-primary-foreground flex items-center justify-center ${actionCorners === 'sharp' ? 'rounded-none' : 'rounded-full'} gap-2 px-5 py-3 text-center text-base font-medium`
+                  : `bg-primary text-primary-foreground block ${actionCorners === 'sharp' ? 'rounded-none' : 'rounded-full'} px-5 py-3 text-center text-base font-medium`
+              }
             >
-              {cta.label}
+              {overlayCtaContent}
             </Link>
           </div>
         </div>

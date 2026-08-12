@@ -152,38 +152,94 @@ interface TextScrubOptions {
   start?: string;
   /** ScrollTrigger end position — paint completes here. */
   end?: string;
-  /** Dimmed starting opacity of each word (0–1). */
+  /** Element whose geometry drives the paint (defaults to `target`). */
+  trigger?: Element | null;
+  /** Dimmed starting opacity of each paint unit (word or character, 0–1). */
   from?: number;
-  /** Per-word offset within the scrubbed timeline (higher = more sequential). */
+  /** Offset between paint units within the scrubbed timeline (higher = more sequential). */
   stagger?: number;
+  /** Split by character and add a short token-driven sheen at the paint edge. */
+  gradientFrontier?: boolean;
+  /** Number of characters carrying the transient sheen. */
+  frontierWidth?: number;
 }
 
 /**
- * Scroll-tinted text: split into words, each dimmed at first and "painted in"
- * (opacity `from` → 1) as the section scrolls through the viewport. Progress is
- * bound to scroll position (`scrub`), so scrolling back dims the words again.
+ * Scroll-tinted text with two compatible modes. The default path splits into
+ * words, each dimmed at first and "painted in" (opacity `from` → 1) as the
+ * section scrolls through the viewport. The opt-in `gradientFrontier` path
+ * splits into characters instead, adding a short CSS gradient class only at the
+ * active paint edge. Progress is bound to scroll position (`scrub`), so
+ * scrolling back dims and restores the matching words or characters.
  *
- * Only opacity animates — never colour — so the theme's `text-foreground` stays
- * authoritative and no tokens are parsed. With reduced motion the preset does
- * nothing and the text is fully readable; without JS the text is fully visible
- * (the dim start state is applied here via `gsap.set`, never in markup).
+ * The default path animates only opacity. The frontier path still lets GSAP own
+ * only progress and opacity: its CSS gradient reads live theme variables, so no
+ * colours are parsed or cached in JavaScript. With reduced motion the preset
+ * does nothing and the text is fully readable; without JS the text is fully
+ * visible (the dim start state is applied here via `gsap.set`, never in markup).
  */
 export function textScrub(target: Target, options: TextScrubOptions = {}): void {
   if (!target || prefersReducedMotion()) return;
-  const { start = 'top 80%', end = 'bottom 65%', from = 0.2, stagger = 0.4 } = options;
+  const {
+    start = 'top 80%',
+    end = 'bottom 65%',
+    trigger,
+    from = 0.2,
+    stagger = 0.4,
+    gradientFrontier = false,
+    frontierWidth = 2,
+  } = options;
+
+  // Preserve statement-01's word-level scrub and all of its defaults exactly.
+  if (!gradientFrontier) {
+    const split = new SplitText(target as HTMLElement, {
+      type: 'words',
+      wordsClass: 'scrub-word',
+    });
+
+    gsap.set(split.words, { opacity: from });
+    gsap.to(split.words, {
+      opacity: 1,
+      ease: 'none',
+      stagger,
+      scrollTrigger: { trigger: trigger ?? target, start, end, scrub: true },
+    });
+    return;
+  }
 
   const split = new SplitText(target as HTMLElement, {
-    type: 'words',
-    wordsClass: 'scrub-word',
+    type: 'chars',
+    charsClass: 'scrub-char',
   });
+  const chars = split.chars as HTMLElement[];
+  if (chars.length === 0) return;
 
-  gsap.set(split.words, { opacity: from });
-  gsap.to(split.words, {
+  gsap.set(chars, { opacity: from });
+  let tween: gsap.core.Tween | undefined;
+  const updateFrontier = () => {
+    if (!tween) return;
+    const progress = tween.progress();
+    chars.forEach((char) => char.classList.remove('scrub-frontier'));
+
+    // At either resting endpoint there is no sheen: completed text is plain
+    // foreground and upcoming text is only opacity-muted.
+    if (progress <= 0 || progress >= 1) return;
+
+    const startIndex = Math.min(chars.length - 1, Math.floor(progress * chars.length));
+    const endIndex = Math.min(chars.length, startIndex + frontierWidth);
+    for (let index = startIndex; index < endIndex; index += 1) {
+      chars[index]?.classList.add('scrub-frontier');
+    }
+  };
+
+  tween = gsap.to(chars, {
     opacity: 1,
     ease: 'none',
     stagger,
-    scrollTrigger: { trigger: target, start, end, scrub: true },
+    onUpdate: updateFrontier,
+    scrollTrigger: { trigger: trigger ?? target, start, end, scrub: true },
   });
+  updateFrontier();
 }
 
 interface InlineExpandOptions {
@@ -229,6 +285,8 @@ interface ClassOnScrollOptions {
   /** Element whose position drives the toggle (defaults to `target`). */
   trigger?: Element | null;
   start?: string;
+  /** Keep threshold state (default) or apply the completed state under reduced motion. */
+  reducedMotion?: 'threshold' | 'final';
 }
 
 /**
@@ -238,20 +296,66 @@ interface ClassOnScrollOptions {
  * sanctioned pattern for scroll-linked theme/colour changes: colours never
  * animate in JS, only via CSS transitions between token values.
  *
- * Not guarded by reduced-motion — it flips state, not motion; the global
- * reduced-motion rule collapses the block's CSS transition to an instant change.
+ * Reduced motion preserves the threshold state by default, creating the same
+ * state-only ScrollTrigger with the CSS transition collapsed globally. Opt in
+ * to `reducedMotion: 'final'` for a static completed state with no trigger.
  */
 export function classOnScroll(target: Target, options: ClassOnScrollOptions): void {
   if (!target) return;
   const el = target as HTMLElement;
-  const { className, trigger = el, start = 'top 60%' } = options;
+  const {
+    className,
+    trigger = el,
+    start = 'top 60%',
+    reducedMotion = 'threshold',
+  } = options;
   const classes = className.split(' ').filter(Boolean);
+
+  if (prefersReducedMotion() && reducedMotion === 'final') {
+    el.classList.add(...classes);
+    return;
+  }
 
   ScrollTrigger.create({
     trigger: trigger ?? el,
     start,
     onEnter: () => el.classList.add(...classes),
     onLeaveBack: () => el.classList.remove(...classes),
+  });
+}
+
+interface ProgressVarOptions {
+  /** CSS custom property receiving the 0–1 scrub progress. */
+  property?: string;
+  /** Element whose geometry drives the scrub (defaults to `target`). */
+  trigger?: Element | null;
+  /** ScrollTrigger start position. */
+  start?: string;
+  /** ScrollTrigger end position. */
+  end?: string;
+}
+
+/**
+ * Scrub 0–1 scroll progress into one CSS custom property. CSS can then derive
+ * a large choreography from that single value, keeping the per-frame work
+ * independent of the number of rendered elements. The stylesheet must default
+ * the property to its finished value so no-JS and reduced-motion stay complete.
+ */
+export function progressVar(target: Target, options: ProgressVarOptions = {}): void {
+  if (!target || prefersReducedMotion()) return;
+  const el = target as HTMLElement;
+  const {
+    property = '--play',
+    trigger = el,
+    start = 'top top',
+    end = 'bottom bottom',
+  } = options;
+
+  gsap.set(el, { [property]: 0 });
+  gsap.to(el, {
+    [property]: 1,
+    ease: 'none',
+    scrollTrigger: { trigger: trigger ?? el, start, end, scrub: true },
   });
 }
 
@@ -328,4 +432,60 @@ export function parallaxImage(target: Target, options: ParallaxOptions = {}): vo
       },
     }
   );
+}
+
+interface CollageExpandOptions {
+  /** Element whose scroll passage controls the reversible choreography. */
+  trigger?: Element | null;
+  /** The left and right media groups, in that order. */
+  sideGroups: Array<Element | null | undefined>;
+  /** ScrollTrigger start position. */
+  start?: string;
+  /** ScrollTrigger end position. */
+  end?: string;
+  /** Final multiplier for the centre media's layout width. */
+  expansion?: number;
+  /** Outward horizontal travel of each side group, in its own width percent. */
+  sideOffset?: number;
+}
+
+/**
+ * Reversible scroll collage choreography: centre media widens as the left/right
+ * groups move outward and soften. Its 100% → percentage width target stays
+ * responsive across ScrollTrigger refreshes, and the block centres the wrapper
+ * in its grid area so the reveal grows symmetrically. The inner image keeps an
+ * isotropic rendered aspect; the block supplies an overflow-hidden frame.
+ * Static markup remains the full five-part collage, and reduced-motion leaves
+ * that complete state untouched.
+ */
+export function collageExpand(target: Target, options: CollageExpandOptions): void {
+  if (!target || prefersReducedMotion()) return;
+  const {
+    trigger = target,
+    sideGroups,
+    start = 'top bottom',
+    end = 'bottom top',
+    expansion = 1.8,
+    sideOffset = 88,
+  } = options;
+  const centre = target as HTMLElement;
+  const sides = sideGroups.filter((group): group is Element => Boolean(group));
+  if (!trigger || sides.length === 0) return;
+
+  const timeline = gsap.timeline({
+    scrollTrigger: { trigger, start, end, scrub: true },
+  });
+  timeline.fromTo(
+    centre,
+    { width: '100%' },
+    { width: `${expansion * 100}%`, ease: 'none' },
+    0
+  );
+  sides.forEach((side, index) => {
+    timeline.to(
+      side,
+      { xPercent: index === 0 ? -sideOffset : sideOffset, opacity: 0.18, ease: 'none' },
+      0
+    );
+  });
 }
