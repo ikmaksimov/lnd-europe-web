@@ -311,12 +311,16 @@
     --gallery-scale: calc(
       0.88 + 0.12 * min(var(--gallery-settle), calc(1 - var(--gallery-exit)))
     );
+    --gallery-exit-anchor-offset: calc(
+      var(--gallery-exit) * 0.12 * var(--gallery-exit-anchor)
+    );
     position: absolute;
     top: 50%;
     left: var(--gallery-stage-edge);
     width: max-content;
-    transform: translate3d(0, -50%, 0) scale(var(--gallery-scale));
-    transform-origin: center center;
+    transform: translate3d(var(--gallery-exit-anchor-offset), -50%, 0)
+      scale(var(--gallery-scale));
+    transform-origin: left center;
     will-change: transform;
   }
   .gallery-scroll-scene .gallery-cinematic-edge-probe {

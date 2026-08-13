@@ -1,7 +1,7 @@
 import type { EditSchema } from '@/lib/edit-schema';
 
-/** Editable content of features-06. Item point icons are ReactNode code slots
- * and deliberately omitted from serialized PageDoc content. */
+/** Editable content of features-06. Item point icons and media are ReactNode
+ * code slots, deliberately omitted from serialized PageDoc content. */
 export const editSchema: EditSchema = {
   fields: [
     { key: 'heading', label: 'Heading', kind: 'text' },

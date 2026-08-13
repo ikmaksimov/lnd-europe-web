@@ -12,6 +12,9 @@ import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
 import { HeroBlur } from '@/components/sections/hero-blur';
 import { Statement06 } from '@/blocks/statement/statement-06/statement-06';
 import { Features06, type Features06Props } from '@/blocks/features/features-06/features-06';
+import { MarketScene } from '@/components/scenes/market-scene';
+import { VerifyScene } from '@/components/scenes/verify-scene';
+import { ReachScene } from '@/components/scenes/reach-scene';
 import { Features08 } from '@/blocks/features/features-08/features-08';
 import { Features03 } from '@/blocks/features/features-03/features-03';
 import { Steps01 } from '@/blocks/steps/steps-01/steps-01';
@@ -178,7 +181,7 @@ const ENGINE_ITEMS: NonNullable<Features06Props['items']> = [
     title: 'The market, mapped continuously',
     description:
       'We map every company in your target market against your ICP — industry, size, projects and market signals — and keep that map moving as the market does.',
-    image: { src: '/placeholders/gallery-villa.svg', alt: 'Placeholder artwork' },
+    media: <MarketScene />,
     points: [
       {
         icon: <Globe size={20} className="text-brand" />,
@@ -198,7 +201,7 @@ const ENGINE_ITEMS: NonNullable<Features06Props['items']> = [
     title: 'Verified before it reaches you',
     description:
       'Every account is checked and enriched before it counts as a lead, so your team spends its time on companies that are real, reachable and relevant now.',
-    image: { src: '/placeholders/gallery-terrace.svg', alt: 'Placeholder artwork' },
+    media: <VerifyScene />,
     points: [
       {
         icon: <SealCheck size={20} className="text-brand" />,
@@ -218,7 +221,7 @@ const ENGINE_ITEMS: NonNullable<Features06Props['items']> = [
     title: 'Reached in the language they buy in',
     description:
       'Multilingual campaigns across LinkedIn, Google and Meta reach the mapped accounts, and qualified conversations land in your CRM with the analytics behind them.',
-    image: { src: '/placeholders/gallery-garden.svg', alt: 'Placeholder artwork' },
+    media: <ReachScene />,
     points: [
       {
         icon: <Broadcast size={20} className="text-brand" />,

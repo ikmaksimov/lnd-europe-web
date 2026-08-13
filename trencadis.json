@@ -4,10 +4,10 @@
   "library": {
     "name": "trencadis",
     "version": "0.1.0",
-    "commit": "55c1d0563d"
+    "commit": "9a31dc48c9-dirty"
   },
   "installedAt": "2026-07-27T13:35:27.744Z",
-  "updatedAt": "2026-08-12T13:57:21.730Z",
+  "updatedAt": "2026-08-13T14:00:28.614Z",
   "blocks": {
     "cta-02": {
       "category": "cta",
@@ -117,11 +117,11 @@
       "from": {
         "name": "trencadis",
         "version": "0.1.0",
-        "commit": "af7b16358b"
+        "commit": "9a31dc48c9-dirty"
       },
       "files": {
-        "blocks/features/features-06/features-06.edit.ts": "sha256:08cdee63ca1687d3",
-        "blocks/features/features-06/features-06.tsx": "sha256:8e95fbf64cb36905",
+        "blocks/features/features-06/features-06.edit.ts": "sha256:34491a32175f401e",
+        "blocks/features/features-06/features-06.tsx": "sha256:f43ee03fb122dd5e",
         "blocks/features/features-06/meta.json": "sha256:fc3cb7ac88326557"
       }
     }
@@ -190,9 +190,9 @@
     "from": {
       "name": "trencadis",
       "version": "0.1.0",
-      "commit": "55c1d0563d"
+      "commit": "9a31dc48c9-dirty"
     },
-    "hash": "sha256:afb95a1ad3b3ea61",
+    "hash": "sha256:4bef830f07c7c28a",
     "themeImport": "../themes/neutral.css"
   },
   "adoptedAt": "2026-07-27T13:34:57.398Z",

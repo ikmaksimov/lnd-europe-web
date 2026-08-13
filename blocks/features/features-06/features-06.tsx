@@ -7,20 +7,23 @@ import { useBlockAnimation } from '@/lib/animations/use-block-animation';
 import { fadeIn, fadeUp } from '@/lib/animations/presets';
 import { Key, Shield, Sparkle, Wrench } from '@/lib/icons';
 
-interface Point {
+export interface Point {
   /** Override the quiet sub-feature tile glyph. Code-level only, never PageDoc content. */
   icon?: ReactNode;
   title: string;
   description: string;
 }
 
-interface Feature06Item {
+export interface Feature06Item {
   badge?: string;
   /** Quiet first line of the card heading lockup. */
   eyebrow?: string;
   title: string;
   description: string;
-  image: { src: string; alt: string; width?: number; height?: number };
+  /** File fallback for the library-owned image branch. */
+  image?: { src: string; alt: string; width?: number; height?: number };
+  /** Replaces the file image with client-composed live media. Code-level only. */
+  media?: ReactNode;
   points: [Point, Point];
 }
 
@@ -90,8 +93,8 @@ const DEFAULT_ITEMS: Feature06Item[] = [
 
 /** Default editable content — single source of truth for props and the Page
  *  Editor (BLOCK-SPEC §9). Keys match features-06.edit.ts (`items` is an array,
- *  read-only in the editor, so its tuple points and ReactNode icons stay in
- *  DEFAULT_ITEMS as code-level content). */
+ *  read-only in the editor, so its tuple points and ReactNode icons/media stay
+ *  in DEFAULT_ITEMS as code-level content). */
 export const defaults = {
   heading: 'Care in the details that matter',
   subheading:
@@ -141,6 +144,7 @@ export function Features06({
         <ul className="mt-14 flex flex-col gap-8">
           {items.map((item, index) => {
             const mediaFirst = index % 2 === 1;
+            const hasMedia = item.media !== undefined;
             return (
               <li
                 key={item.title}
@@ -191,15 +195,26 @@ export function Features06({
 
                   <div
                     data-f6-media
-                    className={`bg-surface relative min-h-72 overflow-hidden ${mediaFirst ? 'lg:order-1' : ''}`}
+                    className={[
+                      'bg-surface relative min-h-72 min-w-0 overflow-hidden',
+                      mediaFirst ? 'lg:order-1' : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
                   >
-                    <Image
-                      src={item.image.src}
-                      alt={item.image.alt}
-                      fill
-                      sizes="(min-width: 1024px) 32rem, 100vw"
-                      className="object-cover"
-                    />
+                    {hasMedia ? (
+                      <div data-f6-media-slot className="absolute inset-0">
+                        {item.media}
+                      </div>
+                    ) : item.image ? (
+                      <Image
+                        src={item.image.src}
+                        alt={item.image.alt}
+                        fill
+                        sizes="(min-width: 1024px) 32rem, 100vw"
+                        className="object-cover"
+                      />
+                    ) : null}
                   </div>
                 </div>
               </li>

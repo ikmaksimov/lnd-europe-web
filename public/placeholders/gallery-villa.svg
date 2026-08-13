@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Placeholder">
-  <rect width="800" height="600" fill="#eeece9"/>
-  <rect x="0" y="440" width="800" height="160" fill="#d6d3d1"/>
-  <path d="M240 440V260l160-110 160 110v180z" fill="#a8a29e"/>
-  <path d="M210 270 400 130 590 270" fill="none" stroke="#78716c" stroke-width="14" stroke-linejoin="round"/>
-  <rect x="360" y="360" width="80" height="80" fill="#eeece9"/>
-  <text x="400" y="560" font-family="system-ui, sans-serif" font-size="26" font-weight="600" fill="#78716c" text-anchor="middle">Villa</text>
-</svg>
