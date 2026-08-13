@@ -92,6 +92,48 @@ export function projectGrid({
   return points;
 }
 
+/** One line of a grid overlay, plus `i` (the step it sits on) for styling. */
+export interface GridLine {
+  a: Point2;
+  b: Point2;
+  i: number;
+}
+
+/**
+ * The horizontal and vertical lattice lines of a rectangular patch of grid —
+ * what a scene draws to make a lattice of points read as a PLANE. Factored out
+ * of the projection itself (rather than left as a one-off loop in a scene)
+ * because more than one scene draws a lattice at a different density.
+ */
+export function projectGridLines({
+  cols,
+  rows,
+  originX = 0,
+  originY = 0,
+  step = 1,
+  z = 0,
+  unit = 1,
+}: GridOptions): GridLine[] {
+  const lines: GridLine[] = [];
+  for (let i = 0; i <= rows; i += 1) {
+    const g = originY + i * step;
+    lines.push({
+      i,
+      a: project({ x: originX, y: g, z }, unit),
+      b: project({ x: originX + cols * step, y: g, z }, unit),
+    });
+  }
+  for (let i = 0; i <= cols; i += 1) {
+    const g = originX + i * step;
+    lines.push({
+      i,
+      a: project({ x: g, y: originY, z }, unit),
+      b: project({ x: g, y: originY + rows * step, z }, unit),
+    });
+  }
+  return lines;
+}
+
 /**
  * The four corners of an axis-aligned rectangle of grid, in draw order
  * (near → right → far → left). Used for plane outlines and cell fills alike.
@@ -204,4 +246,29 @@ export function viewBoxOf(points: Point2[], padding = 0): string {
     round(b.width + padding * 2),
     round(b.height + padding * 2),
   ].join(' ');
+}
+
+/**
+ * A SQUARE viewBox sized to the geometry it is given: the shorter of width/height
+ * is expanded to match the longer, growing evenly from the centre so the content
+ * stays centred. An isometric projection of a symmetric grid is naturally a wide
+ * diamond, not a square, so card-sized scenes (dropped into a 1:1 media slot with
+ * `object-fit: cover`) need this rather than `viewBoxOf` — a non-square viewBox
+ * under `cover` crops asymmetrically as the frame's own ratio drifts.
+ *
+ * Returns the box both as a ready `viewBox` string and as numbers, so a caller
+ * can also paint a same-sized background rect from `x`/`y`/`width`/`height`.
+ */
+export function squareViewBoxOf(
+  points: Point2[],
+  padding = 0
+): { x: number; y: number; width: number; height: number; viewBox: string } {
+  const b = bounds(points);
+  const w = b.width + padding * 2;
+  const h = b.height + padding * 2;
+  const size = Math.max(w, h);
+  const x = round(b.x - padding - (size - w) / 2);
+  const y = round(b.y - padding - (size - h) / 2);
+  const rounded = round(size);
+  return { x, y, width: rounded, height: rounded, viewBox: `${x} ${y} ${rounded} ${rounded}` };
 }

@@ -30,11 +30,12 @@ const UNIT = 30;
  * Each is narrower than the one below it: that shrinking footprint is what makes
  * the stack read as a distillation rather than as three unrelated diagrams. The
  * z steps are even and generous enough that no plane's contents cross into the
- * plane above — at 3.4 apart the crown boxes hung down into the network.
+ * plane above — at 3.4 apart the crown boxes hung down into the network, and at
+ * 8.8 the front box's base still touched the network's top nodes.
  */
 const GROUND = { from: 0, to: 10, z: 0 };
 const MIDDLE = { from: 2, to: 8, z: 4.2 };
-const CROWN = { from: 2.8, to: 7.4, z: 8.8 };
+const CROWN = { from: 2.8, to: 7.4, z: 9.3 };
 
 /** How many diagonal bands the ground lattice appears in. Fewer = coarser wave,
  *  and — because a band is what actually animates — cheaper per frame. */
@@ -80,17 +81,29 @@ const LINK_REACH = 2;
 const LINK_DEGREE = 3;
 
 /**
- * The prioritised accounts: a box each, plus the score it carries. Spaced a
- * clear 1.8 grid units apart — at the 0.8 they started on, the four boxes
- * projected into one overlapping mass instead of four accounts.
+ * The prioritised accounts: a box each, plus its rank. Spaced a clear 1.8 grid
+ * units apart — at the 0.8 they started on, the four boxes projected into one
+ * overlapping mass instead of four accounts.
+ *
+ * `tier` is a rank out of 4 (4 = highest), not a score — the scene is
+ * decorative and `aria-hidden`, and a number here would read as a real account
+ * score on a client site. It renders as a small staircase of tick marks with
+ * `tier` of the four filled; see `.scene-score` in globals.css.
  */
-const CROWN_NODES: ReadonlyArray<{ gx: number; gy: number; score: number }> = [
-  { gx: 3, gy: 3, score: 96 },
-  { gx: 6, gy: 3, score: 91 },
-  { gx: 3, gy: 6, score: 88 },
-  { gx: 6, gy: 6, score: 84 },
+const CROWN_NODES: ReadonlyArray<{ gx: number; gy: number; tier: 1 | 2 | 3 | 4 }> = [
+  { gx: 3, gy: 3, tier: 4 },
+  { gx: 6, gy: 3, tier: 3 },
+  { gx: 3, gy: 6, tier: 2 },
+  { gx: 6, gy: 6, tier: 1 },
 ];
 const CUBE = { x: 1.2, y: 1.2, z: 1.2 };
+
+/** The rank glyph: a small staircase of tick marks, tallest first, decreasing
+ *  length — `tier` of the four filled on --brand, the rest left hollow. Sized
+ *  to roughly the footprint of the two-digit number it replaces. */
+const RANK_BAR_HEIGHTS = [12, 9, 6, 3] as const;
+const RANK_BAR_WIDTH = 3;
+const RANK_BAR_GAP = 2;
 
 const round = (n: number) => Number(n.toFixed(1));
 
@@ -204,22 +217,29 @@ const crownDepth = {
   max: Math.max(...CROWN_NODES.map((n) => n.gx + n.gy)),
 };
 
-const crownBoxes = CROWN_NODES.map(({ gx, gy, score }) => {
+const crownBoxes = CROWN_NODES.map(({ gx, gy, tier }) => {
   const origin = { x: gx, y: gy, z: CROWN.z };
   const corners = boxCorners(origin, CUBE, UNIT);
+  /** The rank glyph sits on the top face, not beside the box: a free-floating
+   *  label lands on whichever neighbour happens to project underneath it, and
+   *  which neighbour that is changes every time a box moves. */
+  const anchor = project({ x: gx + CUBE.x / 2, y: gy + CUBE.y / 2, z: CROWN.z + CUBE.z }, UNIT);
+  const rankWidth = RANK_BAR_HEIGHTS.length * RANK_BAR_WIDTH + (RANK_BAR_HEIGHTS.length - 1) * RANK_BAR_GAP;
+  const baseline = anchor.y + 6;
+  const startX = anchor.x - rankWidth / 2;
+  const rankBars = RANK_BAR_HEIGHTS.map((h, i) => ({
+    x: round(startX + i * (RANK_BAR_WIDTH + RANK_BAR_GAP)),
+    y: round(baseline - h),
+    width: RANK_BAR_WIDTH,
+    height: h,
+    filled: i < tier,
+  }));
   return {
-    score,
     depth: normalise(gx + gy, crownDepth.min, crownDepth.max),
     edges: boxEdges(origin, CUBE, UNIT),
     /** Indices 4–7 are the top face — the one that catches the fill. */
     top: corners.slice(4),
-    /** The score sits on the top face, not beside the box: a free-floating
-     *  label lands on whichever neighbour happens to project underneath it,
-     *  and which neighbour that is changes every time a box moves. */
-    label: project(
-      { x: gx + CUBE.x / 2, y: gy + CUBE.y / 2, z: CROWN.z + CUBE.z },
-      UNIT
-    ),
+    rankBars,
     /** Dashed plumb line down to the ground plane, at the box's centre. */
     guide: {
       a: project({ x: gx + CUBE.x / 2, y: gy + CUBE.y / 2, z: GROUND.z }, UNIT),
@@ -233,7 +253,10 @@ const crownBoxes = CROWN_NODES.map(({ gx, gy, score }) => {
 const VIEW_BOX = viewBoxOf(
   [
     ...groundOutline,
-    ...crownBoxes.flatMap((box) => [...box.top, box.label]),
+    ...crownBoxes.flatMap((box) => [
+      ...box.top,
+      ...box.rankBars.map((bar) => ({ x: bar.x, y: bar.y })),
+    ]),
   ],
   26
 );
@@ -336,7 +359,11 @@ export function EngineScene({
         ground === 'deep' ? 'scene-ground-deep' : ''
       }`}
     >
-      <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden px-4 py-12 sm:px-8">
+      {/* The viewBox is landscape; a portrait h-svh frame on a narrow phone
+          leaves a lot of empty vertical space above and below it. Shortening
+          the frame on small screens is layout-only — the runway math reads
+          the SECTION's height, not this div's, so progress is unaffected. */}
+      <div className="sticky top-0 flex h-[70svh] items-center justify-center overflow-hidden px-4 py-12 sm:h-svh sm:px-8">
         <svg
           aria-hidden="true"
           viewBox={VIEW_BOX}
@@ -463,15 +490,18 @@ export function EngineScene({
               </g>
             ))}
             {crownBoxes.map((box, index) => (
-              <text
-                key={`score-${index}`}
-                className="scene-score font-mono"
-                x={round(box.label.x)}
-                y={round(box.label.y)}
-                style={{ '--d': box.depth } as CSSProperties}
-              >
-                {box.score}
-              </text>
+              <g key={`rank-${index}`} className="scene-score" style={{ '--d': box.depth } as CSSProperties}>
+                {box.rankBars.map((bar, barIndex) => (
+                  <rect
+                    key={barIndex}
+                    className={bar.filled ? 'scene-score-fill' : 'scene-score-empty'}
+                    x={bar.x}
+                    y={bar.y}
+                    width={bar.width}
+                    height={bar.height}
+                  />
+                ))}
+              </g>
             ))}
           </g>
         </svg>

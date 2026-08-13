@@ -536,12 +536,19 @@
   stroke-linejoin: round;
 }
 
-/* A group that scales must scale about itself, not about the SVG origin. */
+/* A group that scales must scale about itself, not about the SVG origin. Shared
+   across every scene in the family (engine-scene plus the three card scenes
+   below), rather than repeated per component. */
 .scene-plane-ground,
 .scene-band,
 .scene-node-mid,
 .scene-cube,
-.scene-score {
+.scene-score,
+.market-node,
+.market-node-glow,
+.verify-dot,
+.verify-glow,
+.reach-crm {
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -648,15 +655,27 @@
   stroke: none;
 }
 
+/*
+  The rank glyph — a small staircase of tick marks standing in for the crown
+  boxes' score. Non-quantitative on purpose: the scene is decorative and
+  aria-hidden, but a rendered number reads as a real account score on a client
+  site, and 96 / 91 / 88 / 84 were invented. Filled-vs-hollow encodes rank
+  without asserting a magnitude; the same --stage-score arrival timing as
+  before, just retargeted from a <text> to a group of <rect>.
+*/
 .scene-score {
   --t: clamp(0, calc((var(--stage-score) * 1.5 - var(--d)) / 0.5), 1);
-  fill: var(--foreground);
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  text-anchor: middle;
-  dominant-baseline: central;
   opacity: var(--t);
   transform: translate(0, calc((1 - var(--t)) * 8px));
+}
+.scene-score-fill {
+  fill: var(--brand);
+}
+.scene-score-empty {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.5;
+  stroke-width: 1;
 }
 
 /* Reduced density on small screens — the SAME scene, every other lattice row
@@ -665,6 +684,206 @@
   .scene-fine {
     display: none;
   }
+}
+
+/*
+  Card scenes — market-scene, verify-scene, reach-scene.
+  --------------------------------------------------------------------------
+  Three square, card-sized diagrams for the #engine section's features-06
+  cards (still previewed on /lab: the block's slot only takes an <Image> src
+  today). Same family as engine-scene above — same projection, same stroke
+  weights, same --brand/--muted/currentColor vocabulary, same one-property
+  --scene-progress contract — but each is a single flat plane, not a stack, and
+  each drives --scene-progress directly rather than through --stage-* windows,
+  since a card is a one- or two-beat moment, not a four-part assembly.
+
+  Card-sized also means no mobile-density thinning (contrast .scene-fine
+  above): the node counts here are already low enough to read at 375px, so
+  there is one composition, not two.
+*/
+
+/* market-scene — card 01: a scattered field settles onto a lattice, then a few
+   accounts brighten to --brand. */
+.market-scene {
+  --scene-progress: 1;
+  --stage-grid: clamp(0, calc(var(--scene-progress) / 0.3), 1);
+  --stage-settle: clamp(0, calc(var(--scene-progress) / 0.6), 1);
+  --stage-highlight: clamp(0, calc((var(--scene-progress) - 0.55) / 0.45), 1);
+}
+
+.market-outline {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.5;
+  stroke-width: 1.2;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: calc(var(--len) * (1 - var(--stage-grid)));
+}
+
+.market-grid {
+  opacity: var(--stage-grid);
+}
+.market-grid line {
+  stroke: currentColor;
+  stroke-opacity: 0.16;
+  stroke-width: 1;
+}
+
+/* Each node's --dx/--dy is the SCREEN-space delta between its scattered start
+   and its final grid position (computed once in market-grid.ts); --t interpolates
+   that delta to zero, so the CSS default (--scene-progress: 1) lands exactly on
+   the lattice with no residual offset.
+
+   The `* 1px`: --dx/--dy are bare numbers, and unlike stroke-dashoffset (an SVG
+   presentation property, which treats a unitless number as user units) `translate()`
+   requires an explicit length — a bare number there is invalid, and silently drops
+   the whole `transform` declaration rather than erroring. */
+.market-node {
+  --t: clamp(0, calc((var(--stage-settle) * 1.6 - var(--d)) / 0.6), 1);
+  transform: translate(calc(var(--dx) * 1px * (1 - var(--t))), calc(var(--dy) * 1px * (1 - var(--t))));
+}
+.market-node-dot {
+  fill: currentColor;
+  fill-opacity: 0.55;
+}
+/* A brand overlay fading in on top of the quiet dot — brightness, not a hue
+   change, same reasoning as engine-scene's mid-nodes. */
+.market-node-glow {
+  --h: clamp(0, calc((var(--stage-highlight) * 1.6 - var(--d)) / 0.6), 1);
+  fill: var(--brand);
+  opacity: var(--h);
+  transform: scale(calc(0.55 + var(--h) * 0.45));
+}
+
+/* verify-scene — card 02: picks up market-scene's field already organised (no
+   draw-in on the outline or grid here), then a sweep resolves every node into
+   confirmed or dropped. Driven by --scene-progress directly: one continuous
+   beat, not a multi-part assembly. */
+.verify-scene {
+  --scene-progress: 1;
+}
+.verify-outline {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.5;
+  stroke-width: 1.2;
+}
+.verify-grid line {
+  stroke: currentColor;
+  stroke-opacity: 0.16;
+  stroke-width: 1;
+}
+
+/* --d is each node's depth (gx + gy, normalised) — the same measure the sweep
+   line's own position is computed from, so a node resolves exactly as the
+   sweep passes it, with a short 0.08 feather rather than an instant pop.
+
+   The `* 1.08` overshoot (same idiom as engine-scene's --stage-* windows,
+   e.g. `--stage-nodes * 1.7`) matters here for one specific node: --d reaches
+   exactly 1 at the plane's farthest corner, and without it that corner's --t
+   would compute to (1 - 1) / 0.08 = 0 at --scene-progress: 1 — the single
+   node the sweep never finishes resolving, even in the finished state. */
+.verify-node {
+  --t: clamp(0, calc((var(--scene-progress) * 1.08 - var(--d)) / 0.08), 1);
+}
+.verify-dot {
+  fill: currentColor;
+  fill-opacity: 0.55;
+}
+/* Dropped: recedes as the sweep passes, but stays legible — the base circle
+   already carries fill-opacity: 0.55, and this opacity stacks multiplicatively
+   on top of it, so a floor of 0.25 here rendered at a barely-there ~0.14
+   combined opacity. The card's whole point is that dropped visibly outnumbers
+   confirmed; a set of accounts that has faded to near-invisible doesn't read
+   as "outnumbers", it reads as "gone". 0.55 keeps that combined opacity
+   around 0.3 — still clearly deprioritised, not vanished. */
+.verify-dot-dropped {
+  opacity: calc(1 - var(--t) * 0.45);
+  transform: scale(calc(1 - var(--t) * 0.3));
+}
+/* Confirmed: the quiet dot fades out from under the brand glow taking over. */
+.verify-dot-confirmed {
+  opacity: calc(1 - var(--t) * 0.7);
+}
+.verify-glow {
+  fill: var(--brand);
+  opacity: var(--t);
+  transform: scale(calc(0.6 + var(--t) * 0.5));
+}
+
+/* The sweep line itself: its screen-y is computed analytically in verify-scene.tsx
+   (constant depth = constant y in this projection, see the comment there), so
+   only a translateY and an opacity move per frame. A parabola — zero at both
+   ends, peak mid-travel — keeps it invisible at rest (progress 0 or 1), so the
+   CSS-default finished state shows only the resolved field, no stray line. */
+.verify-sweep {
+  stroke: var(--brand);
+  stroke-width: 1.4;
+  opacity: calc(var(--scene-progress) * (1 - var(--scene-progress)) * 4);
+  /* `* 1px` — see the comment on .market-node: --sweep-min/--sweep-range are
+     bare numbers, and translateY() silently drops the whole declaration
+     without an explicit unit. */
+  transform: translateY(calc((var(--sweep-min) + var(--scene-progress) * var(--sweep-range)) * 1px));
+}
+
+/* reach-scene — card 03: the confirmed accounts (static — already established
+   by verify-scene) send edges out to channel anchors, which converge into one
+   CRM box. Two stages: distribution, then convergence. */
+.reach-scene {
+  --scene-progress: 1;
+  --stage-out: clamp(0, calc(var(--scene-progress) / 0.55), 1);
+  --stage-in: clamp(0, calc((var(--scene-progress) - 0.4) / 0.4), 1);
+  --stage-crm: clamp(0, calc((var(--scene-progress) - 0.7) / 0.3), 1);
+}
+
+.reach-confirmed {
+  fill: var(--brand);
+}
+
+.reach-edge-out {
+  --t: clamp(0, calc((var(--stage-out) * 1.7 - var(--d)) / 0.7), 1);
+  stroke: var(--brand);
+  stroke-width: 1.4;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: calc(var(--len) * (1 - var(--t)));
+  opacity: calc(0.35 + var(--t) * 0.65);
+}
+
+.reach-anchor-quiet {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.5;
+  stroke-width: 1;
+}
+.reach-anchor-lit {
+  --t: clamp(0, calc((var(--stage-out) * 1.7 - var(--d)) / 0.7), 1);
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 1.4;
+  opacity: var(--t);
+}
+
+.reach-edge-in {
+  --t: clamp(0, calc((var(--stage-in) * 1.7 - var(--d)) / 0.7), 1);
+  stroke: var(--brand);
+  stroke-width: 1.4;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: calc(var(--len) * (1 - var(--t)));
+  opacity: calc(0.35 + var(--t) * 0.65);
+}
+
+.reach-crm {
+  opacity: var(--stage-crm);
+  transform: translate(0, calc((1 - var(--stage-crm)) * 20px)) scale(calc(0.7 + var(--stage-crm) * 0.3));
+}
+.reach-crm line {
+  stroke: var(--brand);
+  stroke-width: 1.6;
+}
+.reach-crm-face {
+  fill: var(--brand);
+  fill-opacity: 0.16;
+  stroke: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
