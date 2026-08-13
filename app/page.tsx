@@ -10,7 +10,9 @@ import { Navbar03 } from '@/blocks/navbar/navbar-03/navbar-03';
 // import { Hero02 } from '@/blocks/hero/hero-02/hero-02';
 // import { Statement01 } from '@/blocks/statement/statement-01/statement-01';
 import { HeroBlur } from '@/components/sections/hero-blur';
-import { StatementHighlight } from '@/components/sections/statement-highlight';
+import { Statement06 } from '@/blocks/statement/statement-06/statement-06';
+import { Features06, type Features06Props } from '@/blocks/features/features-06/features-06';
+import { Features08 } from '@/blocks/features/features-08/features-08';
 import { Features03 } from '@/blocks/features/features-03/features-03';
 import { Steps01 } from '@/blocks/steps/steps-01/steps-01';
 import { Cta02 } from '@/blocks/cta/cta-02/cta-02';
@@ -64,8 +66,9 @@ const FEATURED = {
 };
 
 const NAV_ITEMS = [
+  { label: 'The engine', href: '#engine' },
   { label: 'Solutions', href: '#solutions' },
-  { label: 'Technology', href: '#how-it-works' },
+  { label: 'How we work', href: '#how-it-works' },
   { label: 'Industries', href: '#industries' },
   {
     label: 'Company',
@@ -79,7 +82,7 @@ const NAV_ITEMS = [
               href: '#why',
             },
             {
-              label: 'How we work',
+              label: 'How we work together',
               description: 'From market intelligence to qualified pipeline.',
               href: '#how-it-works',
             },
@@ -98,66 +101,136 @@ const NAV_ITEMS = [
 //   { label: 'Pan-European coverage', icon: <Globe size={20} /> },
 // ];
 
-/**
- * The "why" statement, split into prose and the three phrases that light up.
- * `start` is where each phrase begins in the section's scroll runway (0–1); the
- * icons trace the actual sequence of the work: scan → verify → convert.
- */
-const WHY_STATEMENT = [
-  'European markets move every day. Static databases do not. Our living intelligence engine continuously ',
+const SOLUTION_GROUPS = [
   {
-    text: 'maps the companies that matter',
-    icon: <Broadcast />,
-    start: 0.08,
+    heading: 'Find the market that matters',
+    items: [
+      {
+        icon: <Globe size={22} className="text-brand" />,
+        title: 'European market entry',
+        description:
+          'Enter new markets with a verified, prioritized map of the companies that matter.',
+      },
+      {
+        icon: <Target size={22} className="text-brand" />,
+        title: 'ICP & account mapping',
+        description:
+          'Automated discovery defines your ideal customer, then maps the market against it.',
+      },
+      {
+        icon: <Bank size={22} className="text-brand" />,
+        title: 'Investment promotion',
+        description:
+          "Connect IPAs and regions with the investors and companies they're built to attract.",
+      },
+    ],
   },
-  ', ',
   {
-    text: 'verifies and prioritizes every account',
-    icon: <SealCheck />,
-    start: 0.32,
+    heading: 'Reach the buyers who matter',
+    items: [
+      {
+        icon: <TrendUp size={22} className="text-brand" />,
+        title: 'B2B demand generation',
+        description: 'Turn intelligence into qualified, multilingual demand across Europe.',
+      },
+      {
+        icon: <Funnel size={22} className="text-brand" />,
+        title: 'Buyer acquisition',
+        description: 'Find and reach the right buyers, not just more contacts.',
+      },
+      {
+        icon: <Broadcast size={22} className="text-brand" />,
+        title: 'Multilingual outreach',
+        description:
+          'AI-driven campaigns across LinkedIn, Google and Meta reach accounts in their own language.',
+      },
+    ],
   },
-  ', and ',
   {
-    text: 'turns live market signals into qualified pipeline',
-    icon: <Funnel />,
-    start: 0.58,
+    heading: 'Turn interest into pipeline',
+    items: [
+      {
+        icon: <Tent size={22} className="text-brand" />,
+        title: 'Exhibitor recruitment',
+        description:
+          'Fill your floor with relevant exhibitors, backed by 10+ years in the exhibition industry.',
+      },
+      {
+        icon: <LinkIcon size={22} className="text-brand" />,
+        title: 'Strategic partnerships',
+        description: 'Identify and open the partnerships that move your business forward.',
+      },
+      {
+        icon: <SealCheck size={22} className="text-brand" />,
+        title: 'Qualified pipeline & CRM',
+        description:
+          'Leads flow into your CRM with analytics and continuous optimization behind them.',
+      },
+    ],
   },
-  '.',
 ];
 
-const SOLUTIONS = [
+/** The three layers the isometric engine scene draws: map → verify → activate. */
+const ENGINE_ITEMS: NonNullable<Features06Props['items']> = [
   {
-    title: 'European Market Entry',
+    badge: 'Layer 01',
+    eyebrow: 'Every company, not a sample',
+    title: 'The market, mapped continuously',
     description:
-      'Enter new markets with a verified, prioritized map of the companies that matter.',
-    icon: <Globe size={40} className="text-brand" />,
+      'We map every company in your target market against your ICP — industry, size, projects and market signals — and keep that map moving as the market does.',
+    image: { src: '/placeholders/gallery-villa.svg', alt: 'Placeholder artwork' },
+    points: [
+      {
+        icon: <Globe size={20} className="text-brand" />,
+        title: 'Pan-European coverage',
+        description: 'Markets mapped country by country, in the local language.',
+      },
+      {
+        icon: <Target size={20} className="text-brand" />,
+        title: 'Scored against your ICP',
+        description: 'Every profile ranked by how well it fits what you actually sell.',
+      },
+    ],
   },
   {
-    title: 'B2B Demand Generation',
-    description: 'Turn intelligence into qualified, multilingual demand across Europe.',
-    icon: <TrendUp size={40} className="text-brand" />,
-  },
-  {
-    title: 'Buyer Acquisition',
-    description: 'Find and reach the right buyers, not just more contacts.',
-    icon: <Target size={40} className="text-brand" />,
-  },
-  {
-    title: 'Exhibitor Recruitment',
+    badge: 'Layer 02',
+    eyebrow: 'Not a database dump',
+    title: 'Verified before it reaches you',
     description:
-      'Fill your floor with relevant exhibitors, backed by 10+ years in the exhibition industry.',
-    icon: <Tent size={40} className="text-brand" />,
+      'Every account is checked and enriched before it counts as a lead, so your team spends its time on companies that are real, reachable and relevant now.',
+    image: { src: '/placeholders/gallery-terrace.svg', alt: 'Placeholder artwork' },
+    points: [
+      {
+        icon: <SealCheck size={20} className="text-brand" />,
+        title: 'Checked, not scraped',
+        description: 'Contacts and company data verified before they enter your pipeline.',
+      },
+      {
+        icon: <Cpu size={20} className="text-brand" />,
+        title: 'Continuously re-scored',
+        description: 'Profiles are re-checked as signals change, so nothing goes stale.',
+      },
+    ],
   },
   {
-    title: 'Investment Promotion',
+    badge: 'Layer 03',
+    eyebrow: 'From intelligence to pipeline',
+    title: 'Reached in the language they buy in',
     description:
-      "Connect IPAs and regions with the investors and companies they're built to attract.",
-    icon: <Bank size={40} className="text-brand" />,
-  },
-  {
-    title: 'Strategic Partnerships',
-    description: 'Identify and open the partnerships that move your business forward.',
-    icon: <LinkIcon size={40} className="text-brand" />,
+      'Multilingual campaigns across LinkedIn, Google and Meta reach the mapped accounts, and qualified conversations land in your CRM with the analytics behind them.',
+    image: { src: '/placeholders/gallery-garden.svg', alt: 'Placeholder artwork' },
+    points: [
+      {
+        icon: <Broadcast size={20} className="text-brand" />,
+        title: 'Cross-channel outreach',
+        description: 'The same account approached coherently across every channel.',
+      },
+      {
+        icon: <Funnel size={20} className="text-brand" />,
+        title: 'Straight into your CRM',
+        description: 'Qualified leads arrive where your team already works.',
+      },
+    ],
   },
 ];
 
@@ -228,8 +301,9 @@ const INDUSTRIES = [
 
 const FOOTER_LINKS = [
   { label: 'About', href: '#why' },
+  { label: 'The engine', href: '#engine' },
   { label: 'Solutions', href: '#solutions' },
-  { label: 'Technology', href: '#how-it-works' },
+  { label: 'How we work', href: '#how-it-works' },
   { label: 'Industries', href: '#industries' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -270,25 +344,37 @@ export default function Home() {
           words={{ left: 'SEE', focus: 'EUROPE', right: 'CLEARLY.' }}
           subtitle="We continuously map, verify and prioritize the European companies that matter — then turn that intelligence into qualified demand."
           primaryCta={{ label: 'Map your market', href: BOOK_A_CALL.href }}
-          secondaryCta={{ label: 'Explore the engine', href: '#how-it-works' }}
+          secondaryCta={{ label: 'Explore the engine', href: '#engine' }}
         />
 
         <div id="why" className="scroll-mt-16">
-          <StatementHighlight eyebrow="Why LND Europe" parts={WHY_STATEMENT} />
+          <Statement06
+            eyebrow="Why LND Europe"
+            text="European markets move every day. Static databases do not. Our living intelligence engine continuously maps the companies that matter, verifies and prioritizes every account, and turns live market signals into qualified pipeline."
+          />
+        </div>
+
+        <div id="engine" className="scroll-mt-16">
+          <Features06
+            htmlId="engine"
+            heading="How the engine works"
+            subheading="Three layers between a market you don't know yet and a pipeline your team can work."
+            items={ENGINE_ITEMS}
+          />
         </div>
 
         <div id="solutions" className="scroll-mt-16">
-          <Features03
+          <Features08
             htmlId="solutions"
+            eyebrow="What we do"
             heading="One integrated growth engine"
-            subheading="AI, intelligence and data working as one system — from first signal to qualified pipeline."
-            items={SOLUTIONS}
+            groups={SOLUTION_GROUPS}
           />
         </div>
 
         <div id="how-it-works" className="scroll-mt-16">
           <Steps01
-            heading="How it works"
+            heading="How we work together"
             subheading="Four steps from market intelligence to a qualified pipeline."
             steps={PROCESS}
           />

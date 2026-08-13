@@ -1,0 +1,18 @@
+{
+  "id": "features-06",
+  "category": "features",
+  "name": "Features — alternating showcases",
+  "description": "Alternating edge-to-edge media cards: a heading lockup and paragraph pair each primary capability with two quieter sub-features separated by a decorative rule.",
+  "bestFor": ["product walkthroughs", "service pillars", "capability stories"],
+  "contentSlots": {
+    "heading": "section heading",
+    "subheading": "one sentence under the heading, optional",
+    "items": "2–4 cards: badge? + heading lockup + description + image + exactly two sub-features"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": ["fadeIn", "fadeUp"]
+  },
+  "sourcePattern": "Relume: alternating feature showcase with sub-feature pair",
+  "status": "stable"
+}

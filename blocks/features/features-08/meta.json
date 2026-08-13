@@ -1,0 +1,18 @@
+{
+  "id": "features-08",
+  "category": "features",
+  "name": "Features — grouped capability matrix",
+  "description": "An image-free two-level matrix that groups three compact capabilities under each named care theme.",
+  "bestFor": ["organised capabilities", "service plans", "product categories"],
+  "contentSlots": {
+    "eyebrow": "short overline, optional",
+    "heading": "section heading",
+    "groups": "3 named groups, each with 3 compact capabilities"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": ["fadeIn", "staggerChildren"]
+  },
+  "sourcePattern": "productivity SaaS: grouped feature matrix",
+  "status": "stable"
+}

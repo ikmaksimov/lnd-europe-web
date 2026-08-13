@@ -7,7 +7,7 @@
     "commit": "55c1d0563d"
   },
   "installedAt": "2026-07-27T13:35:27.744Z",
-  "updatedAt": "2026-08-12T11:36:44.231Z",
+  "updatedAt": "2026-08-12T13:57:21.730Z",
   "blocks": {
     "cta-02": {
       "category": "cta",
@@ -81,6 +81,48 @@
       "files": {
         "blocks/steps/steps-01/meta.json": "sha256:f1587d759be6cb36",
         "blocks/steps/steps-01/steps-01.tsx": "sha256:772c54c6eb60726c"
+      }
+    },
+    "statement-06": {
+      "category": "statement",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "af7b16358b"
+      },
+      "files": {
+        "blocks/statement/statement-06/meta.json": "sha256:1ff85a24c0ebbc14",
+        "blocks/statement/statement-06/statement-06.edit.ts": "sha256:8422c1dda584e842",
+        "blocks/statement/statement-06/statement-06.tsx": "sha256:8b90a5c9e48f8b4e"
+      }
+    },
+    "features-08": {
+      "category": "features",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "af7b16358b"
+      },
+      "files": {
+        "blocks/features/features-08/features-08.edit.ts": "sha256:ed287a0c79dc572c",
+        "blocks/features/features-08/features-08.tsx": "sha256:110814317d6b6acd",
+        "blocks/features/features-08/meta.json": "sha256:6e6185f624b2d71e"
+      }
+    },
+    "features-06": {
+      "category": "features",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "af7b16358b"
+      },
+      "files": {
+        "blocks/features/features-06/features-06.edit.ts": "sha256:08cdee63ca1687d3",
+        "blocks/features/features-06/features-06.tsx": "sha256:8e95fbf64cb36905",
+        "blocks/features/features-06/meta.json": "sha256:fc3cb7ac88326557"
       }
     }
   },

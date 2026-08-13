@@ -368,6 +368,15 @@
 */
 :root {
   --brand: #298dff; /* sui.io's primary blue, adopted as LND's accent */
+  /* Library blocks flash their accent from --highlight. Point it at the brand
+     so statement-06's wave reads LND blue rather than the theme's crimson. */
+  --highlight: var(--brand);
+}
+
+/* statement-06 flips to theme-dark halfway, and the theme redeclares
+   --highlight there (#fda4af). Without this the wave turns pink mid-scene. */
+.theme-dark {
+  --highlight: var(--brand);
 }
 
 @theme inline {
@@ -487,77 +496,6 @@
 }
 .hero-blur-word-right {
   transform: translateX(calc(var(--hero-progress) * 4vw));
-}
-
-/*
-  The statement reads word by word as the section scrolls, and the whole section
-  inverts halfway through. Both are driven by two properties a script writes on
-  the section — --play (the reading playhead) and --flip — and everything else is
-  derived in CSS, so no per-word style is written per frame.
-
-  Redefining --background and --foreground here means the inversion reaches
-  everything inside for free: the ground, the type, the dim colour, even the
-  icon chips, because each of them names a token rather than a colour.
-*/
-.statement-scroll {
-  --play: 1;
-  --flip: 0;
-  --count: 1;
-
-  --background: color-mix(
-    in oklab,
-    #ffffff calc((1 - var(--flip)) * 100%),
-    #0b0f1c calc(var(--flip) * 100%)
-  );
-  --foreground: color-mix(
-    in oklab,
-    #1c1917 calc((1 - var(--flip)) * 100%),
-    #ffffff calc(var(--flip) * 100%)
-  );
-  /* Where an unread word sits: present, but clearly behind the read ones. */
-  --dim: color-mix(in oklab, var(--foreground) 30%, var(--background) 70%);
-}
-
-/*
-  Each word derives its own state from its index, so the reveal runs in reading
-  order. --w is 0 before the playhead reaches the word and 1 once it has passed;
-  the divisor spreads the transition over several words, which is what makes the
-  blue read as a travelling band rather than a single flickering word.
-  --blue is a parabola: zero at both ends, peak mid-transition.
-*/
-.statement-word {
-  --w: clamp(0, calc((var(--play) * (var(--count) + 4) - var(--i)) / 3), 1);
-  --blue: calc(var(--w) * (1 - var(--w)) * 4);
-  color: color-mix(
-    in oklab,
-    var(--brand) calc(var(--blue) * 100%),
-    color-mix(
-        in oklab,
-        var(--foreground) calc(var(--w) * 100%),
-        var(--dim) calc((1 - var(--w)) * 100%)
-      )
-      calc((1 - var(--blue)) * 100%)
-  );
-}
-
-/* The icon chip opens by width, so the phrase keeps its place before it lands. */
-.statement-chip {
-  --icon-progress: 1;
-  display: inline-block;
-  width: calc(var(--icon-progress) * 1.02em);
-  height: 0.95em;
-  overflow: hidden;
-  vertical-align: -0.08em;
-  background-color: var(--brand);
-  /* White reads on the brand blue in both halves of the flip. */
-  color: #ffffff;
-}
-.statement-chip svg {
-  display: block;
-  width: 0.95em;
-  min-width: 0.95em;
-  height: 0.95em;
-  padding: 0.11em;
 }
 
 /*

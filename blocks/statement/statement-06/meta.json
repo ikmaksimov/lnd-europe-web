@@ -1,0 +1,25 @@
+{
+  "id": "statement-06",
+  "category": "statement",
+  "name": "Statement — travelling highlight wave",
+  "description": "A two-viewport sticky statement whose indexed words read in behind a CSS-derived travelling highlight wave and a midpoint scoped-theme flip.",
+  "bestFor": [
+    "brand manifestos",
+    "high-impact transitions",
+    "editorial storytelling"
+  ],
+  "contentSlots": {
+    "eyebrow": "short overline label, optional",
+    "text": "statement paragraph, editable",
+    "flipTheme": "whether the scene changes to the scoped dark theme at halfway"
+  },
+  "animation": {
+    "level": "rich",
+    "presets": [
+      "progressVar",
+      "classOnScroll"
+    ]
+  },
+  "sourcePattern": "LND client project contribution: CSS-derived scroll reading wave",
+  "status": "stable"
+}

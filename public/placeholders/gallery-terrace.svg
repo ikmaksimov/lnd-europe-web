@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="700" viewBox="0 0 700 700" role="img" aria-label="Placeholder">
+  <rect width="700" height="700" fill="#e7e5e4"/>
+  <rect x="90" y="90" width="520" height="520" rx="18" fill="#d6d3d1"/>
+  <rect x="170" y="360" width="150" height="180" rx="10" fill="#a8a29e"/>
+  <rect x="380" y="360" width="150" height="180" rx="10" fill="#b8b2ac"/>
+  <circle cx="350" cy="230" r="60" fill="#a8a29e"/>
+  <text x="350" y="640" font-family="system-ui, sans-serif" font-size="26" font-weight="600" fill="#78716c" text-anchor="middle">Terrace</text>
+</svg>
