@@ -20,7 +20,10 @@ const round = (n: number) => Number(n.toFixed(1));
  *  reads top to bottom: confirmed accounts → the channels that reach them →
  *  the one point everything lands in. */
 const MID_Z = 3.4;
-const CRM_Z = 6.6;
+// Was 6.6 — lowered to close some of the vertical gap the CRM box needs above
+// the anchors (see VIEW_BOX below): still a clear 14+ unit gap above the
+// anchor layer at MID_Z, box doesn't touch or visually merge with it.
+const CRM_Z = 5.4;
 const CRM_ORIGIN = { x: -0.55, y: -0.55, z: CRM_Z };
 const CRM_SIZE = { x: 1.1, y: 1.1, z: 1.1 };
 
@@ -75,11 +78,22 @@ const crmEdges = boxEdges(CRM_ORIGIN, CRM_SIZE, CARD_UNIT);
 const framePoints: Point2[] = [...confirmedPoints, ...anchorSquares.flat(), ...crmTop];
 // This scene is taller than it is wide before squaring (the CRM box sits well
 // above the confirmed accounts), so squareViewBoxOf pads the sides generously
-// but the TOP and BOTTOM padding is only this value — measured at 26 to leave
-// just 5–6% margin top and bottom, tight enough that a harder-than-measured
-// crop (see /lab's stress test) reached the CRM box and the lowest confirmed
-// node. 42 keeps both comfortably inside the safe area.
-const VIEW_BOX = squareViewBoxOf(framePoints, 42);
+// but the TOP and BOTTOM padding is only this value. Was 42 (up from an
+// earlier 26), which left ~9.7% vertical content margin — fine on the square
+// desktop slot (552×529) but at the real mobile card ratio (343×288,
+// landscape, `xMidYMid slice`) the crop is ~8% of the viewBox off top AND
+// bottom, leaving only ~0.7% headroom before the CRM box or the lowest
+// confirmed node actually clips. Paired with lowering CRM_Z above (which
+// shortens the frame's content height from ~348 to ~308 units), 100 gives
+// ~19% vertical content margin measured on the point geometry alone; measured
+// against actual rendered bounds (getBBox, which includes stroke widths —
+// circles, box edges) it lands at ~11–12% headroom after the mobile crop, a
+// real buffer above the 10% floor rather than sitting right on it — see
+// TASK-reach-scene-mobile-margin.md. Splitting the fix across both levers
+// (rather than padding alone) keeps the horizontal margin's growth smaller
+// too (~21% → ~25% instead of ~21% → ~27%), so the desktop diagram doesn't
+// shrink as much inside its genuinely-square slot.
+const VIEW_BOX = squareViewBoxOf(framePoints, 100);
 
 /**
  * reach-scene — card 03 of the engine trio: "reached in the language they buy
