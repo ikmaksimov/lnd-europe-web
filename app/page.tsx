@@ -411,6 +411,12 @@ export default function Home() {
         links={FOOTER_LINKS}
         featured={FEATURED}
         copyright={`© 2026 ${siteConfig.name}. All rights reserved.`}
+        legalLinks={[
+          { label: 'Legal Notice', href: '/legal-notice' },
+          { label: 'Privacy', href: '/privacy' },
+          { label: 'Cookies', href: '/cookies' },
+          { label: 'Terms', href: '/terms' },
+        ]}
         // The block always renders this slot — omitting the prop restores its
         // "Made by DigitalForms" default — so it carries the company's own link
         // instead. A truly empty slot needs `credit?: FooterLink | null` upstream.

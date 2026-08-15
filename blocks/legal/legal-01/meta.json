@@ -1,0 +1,21 @@
+{
+  "id": "legal-01",
+  "category": "legal",
+  "name": "Legal — long-form document",
+  "description": "A static page-level frame for counsel-provided legal documents, with stable clause anchors, optional contents, semantic definitions, and responsive data tables.",
+  "bestFor": ["privacy policies", "terms", "cookie policies", "Aviso Legal"],
+  "contentSlots": {
+    "title": "document title",
+    "effectiveDate": "semantic date, optional",
+    "intro": "introductory ReactNode, optional",
+    "sections": "ordered counsel-provided clauses with public fragment ids",
+    "showTableOfContents": "opt-in navigation generated from sections",
+    "tableOfContentsLabel": "contents navigation label, optional"
+  },
+  "animation": {
+    "level": "none",
+    "presets": []
+  },
+  "sourcePattern": "long-form legal document / policy layout",
+  "status": "draft"
+}

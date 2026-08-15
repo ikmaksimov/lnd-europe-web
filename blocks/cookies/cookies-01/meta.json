@@ -1,0 +1,25 @@
+{
+  "id": "cookies-01",
+  "category": "cookies",
+  "name": "Cookies — consent banner",
+  "description": "Fixed EU consent chrome with a compatible binary mode or opt-in versioned category preferences; the page remains responsible for gating tags.",
+  "bestFor": [
+    "EU sites",
+    "privacy notices",
+    "analytics consent",
+    "granular consent preferences"
+  ],
+  "contentSlots": {
+    "text": "one consent sentence",
+    "policy": "privacy policy link",
+    "labels": "binary and granular action labels",
+    "categories": "code-level required and optional purpose configuration",
+    "consentVersion": "code-level version for re-asking after purpose changes"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": []
+  },
+  "sourcePattern": "Relume Cookie 1: consent banner",
+  "status": "stable"
+}

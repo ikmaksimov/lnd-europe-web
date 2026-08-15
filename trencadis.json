@@ -7,7 +7,7 @@
     "commit": "9a31dc48c9-dirty"
   },
   "installedAt": "2026-07-27T13:35:27.744Z",
-  "updatedAt": "2026-08-13T14:00:28.614Z",
+  "updatedAt": "2026-08-15T00:05:53.485Z",
   "blocks": {
     "cta-02": {
       "category": "cta",
@@ -123,6 +123,34 @@
         "blocks/features/features-06/features-06.edit.ts": "sha256:34491a32175f401e",
         "blocks/features/features-06/features-06.tsx": "sha256:f43ee03fb122dd5e",
         "blocks/features/features-06/meta.json": "sha256:fc3cb7ac88326557"
+      }
+    },
+    "legal-01": {
+      "category": "legal",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "45906af22d"
+      },
+      "files": {
+        "blocks/legal/legal-01/legal-01.tsx": "sha256:5b49f34c99ada251",
+        "blocks/legal/legal-01/meta.json": "sha256:ef91e53088042b0b"
+      }
+    },
+    "cookies-01": {
+      "category": "cookies",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "45906af22d"
+      },
+      "files": {
+        "blocks/cookies/cookies-01/cookies-01.edit.ts": "sha256:2b819c9cd171319a",
+        "blocks/cookies/cookies-01/cookies-01.storage.ts": "sha256:892340b6b379dd9b",
+        "blocks/cookies/cookies-01/cookies-01.tsx": "sha256:cd36284c4732d777",
+        "blocks/cookies/cookies-01/meta.json": "sha256:8b207b83c84bca25"
       }
     }
   },

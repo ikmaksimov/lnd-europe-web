@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { siteConfig } from '@/site.config';
 import { LenisProvider } from '@/lib/animations/lenis-provider';
+import { ConsentBanner } from '@/components/consent-banner';
 import './globals.css';
 
 // Self-hosted at build time by next/font, display: swap (SEO-BASELINE §5).
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang={siteConfig.locale} className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="bg-background text-foreground min-h-screen antialiased">
         {siteConfig.smoothScroll ? <LenisProvider>{children}</LenisProvider> : children}
+        <ConsentBanner />
       </body>
     </html>
   );
