@@ -12,12 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: base, lastModified: now, changeFrequency: 'weekly', priority: 1 },
-    {
-      url: `${base}/ai`,
-      lastModified: now,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
+    // /ai is deliberately omitted, per TASK-legal-pages-resolve-markers.md:
+    // the page still carries live [TO CONFIRM]/[sign-off] markers and ships
+    // `robots: { index: false, follow: false }` (see app/ai/page.tsx), so
+    // listing it here would contradict that noindex. Restore this entry
+    // (`priority: 0.9`, same shape as the others) together with deleting the
+    // robots line, in the same future change that resolves those markers.
     {
       url: `${base}/legal-notice`,
       lastModified: now,

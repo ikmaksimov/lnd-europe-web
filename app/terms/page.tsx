@@ -10,14 +10,8 @@ import { Legal01 } from '@/blocks/legal/legal-01/legal-01';
  * the source draft, so legal-01's fixed `paragraphs → items → definitions →
  * tables` render order never reorders anything on this page — audited per
  * TASK-legal-pages-followup.md §1, no wording changes were needed.
- *
- * `effectiveDate` is NOT the real publication date — see below.
  */
-const PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH = '2026-08-15';
-// ^ Placeholder only. These pages still carry `[TO CONFIRM]` markers pending
-// the client's gestoría (Registro Mercantil entry, DPO, retention periods,
-// processor list) — they are not ready to publish. Set this to the actual
-// publication date as the LAST step before deploy, not now.
+const EFFECTIVE_DATE = '2026-08-17';
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
@@ -31,7 +25,7 @@ export default function TermsOfUsePage() {
     <main>
       <Legal01
         title="Terms of Use"
-        effectiveDate={PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH}
+        effectiveDate={EFFECTIVE_DATE}
         intro={
           <>
             <p>

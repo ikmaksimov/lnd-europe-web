@@ -5,8 +5,7 @@ import { Legal01 } from '@/blocks/legal/legal-01/legal-01';
 /**
  * Cookie Policy. Content sourced from TASKS/legal/03-cookie-policy.md — do not
  * edit the wording here beyond what is documented below; it is pending review
- * by the client's lawyer. Where the draft carries a `[TO CONFIRM — …]` marker,
- * it is reproduced as-is below.
+ * by the client's lawyer.
  *
  * DELIBERATELY INCOMPLETE relative to the draft, per TASK-legal-pages.md §4:
  * this site does not run Google Analytics or the Meta Pixel yet (no consent
@@ -32,13 +31,14 @@ import { Legal01 } from '@/blocks/legal/legal-01/legal-01';
  * slot order now inserts another paragraph between the colon and the list, so
  * it was reworded to "…and they are treated differently, as set out below:".
  *
- * `effectiveDate` is NOT the real publication date — see below.
+ * `trencadis:consent` row corrected per TASK-legal-pages-resolve-markers.md
+ * §3: it is `localStorage`, not a cookie, and carries no expiry. The
+ * "strictly-necessary" section uses `parts` (table, then paragraph) instead
+ * of the `tables` convenience field so the explanatory sentence can render
+ * after the table rather than being forced above it by legal-01's fixed
+ * `paragraphs → items → definitions → tables` order.
  */
-const PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH = '2026-08-15';
-// ^ Placeholder only. These pages still carry `[TO CONFIRM]` markers pending
-// the client's gestoría (Registro Mercantil entry, DPO, retention periods,
-// processor list) — they are not ready to publish. Set this to the actual
-// publication date as the LAST step before deploy, not now.
+const EFFECTIVE_DATE = '2026-08-17';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy',
@@ -52,7 +52,7 @@ export default function CookiePolicyPage() {
     <main>
       <Legal01
         title="Cookie Policy"
-        effectiveDate={PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH}
+        effectiveDate={EFFECTIVE_DATE}
         intro={
           <>
             This policy explains what cookies lndeurope.com uses, what each one
@@ -98,24 +98,32 @@ export default function CookiePolicyPage() {
           {
             id: 'strictly-necessary',
             title: 'Cookies used — strictly necessary',
-            tables: [
+            parts: [
               {
-                caption: 'Strictly necessary',
-                columns: ['Name', 'Provider', 'Purpose', 'Duration'],
-                rows: [
-                  [
-                    'trencadis:consent',
-                    'LND Tech Europe (this site)',
-                    'Stores your cookie choice so you are not asked on every visit',
-                    '[TO CONFIRM — 6 or 12 months]',
+                kind: 'table',
+                table: {
+                  caption: 'Strictly necessary',
+                  columns: ['Name', 'Provider', 'Purpose', 'Duration'],
+                  rows: [
+                    [
+                      'trencadis:consent (browser storage, not a cookie)',
+                      'LND Tech Europe (this site)',
+                      'Stores your cookie choice so you are not asked on every visit',
+                      'Until you clear your browser storage',
+                    ],
+                    [
+                      'Cloudflare security cookies',
+                      'Cloudflare, Inc.',
+                      'Distinguishes legitimate visitors from automated traffic; protects against attacks',
+                      'Session to 30 days',
+                    ],
                   ],
-                  [
-                    'Cloudflare security cookies',
-                    'Cloudflare, Inc.',
-                    'Distinguishes legitimate visitors from automated traffic; protects against attacks',
-                    'Session to 30 days',
-                  ],
-                ],
+                },
+              },
+              {
+                kind: 'paragraph',
+                content:
+                  "Your consent choice is kept in your browser's local storage rather than in a cookie. It is not sent to us with each request, and clearing your browser data removes it.",
               },
             ],
           },

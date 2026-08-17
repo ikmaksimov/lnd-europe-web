@@ -6,21 +6,19 @@ import { siteConfig } from '@/site.config';
 /**
  * Aviso Legal — legally required in Spain under LSSI-CE (Ley 34/2002) Art. 10.
  * Content sourced verbatim from TASKS/legal/01-legal-notice.md — do not edit
- * the wording here; it is pending review by the client's lawyer. Where the
- * draft carries a `[TO CONFIRM — …]` marker, it is reproduced as-is below.
+ * the wording here; it is pending review by the client's lawyer.
+ *
+ * The Commercial Registry item is omitted outright (see the comment at that
+ * item below) rather than resolved with a marker — per
+ * TASK-legal-pages-resolve-markers.md §1, that data is not available until
+ * the client's escritura arrives.
  *
  * No section here places a paragraph after a list/table/definitions block in
  * the source draft, so legal-01's fixed `paragraphs → items → definitions →
  * tables` render order never reorders anything on this page — audited per
  * TASK-legal-pages-followup.md §1, no wording changes were needed.
- *
- * `effectiveDate` is NOT the real publication date — see below.
  */
-const PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH = '2026-08-15';
-// ^ Placeholder only. These pages still carry `[TO CONFIRM]` markers pending
-// the client's gestoría (Registro Mercantil entry, DPO, retention periods,
-// processor list) — they are not ready to publish. Set this to the actual
-// publication date as the LAST step before deploy, not now.
+const EFFECTIVE_DATE = '2026-08-17';
 
 export const metadata: Metadata = {
   title: 'Legal Notice',
@@ -34,7 +32,7 @@ export default function LegalNoticePage() {
     <main>
       <Legal01
         title="Legal Notice"
-        effectiveDate={PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH}
+        effectiveDate={EFFECTIVE_DATE}
         intro="Aviso Legal — required under Article 10 of Spanish Law 34/2002 (LSSI-CE)."
         sections={[
           {
@@ -58,7 +56,10 @@ export default function LegalNoticePage() {
                   contact@lndeurope.tech
                 </a>
               </>,
-              'Commercial Registry: [TO CONFIRM — Registro Mercantil de Valencia, volume, folio, sheet, entry]',
+              // Commercial Registry (Registro Mercantil de Valencia — volume,
+              // folio, sheet, entry) is intentionally omitted, not forgotten:
+              // it is pending the client's escritura. Add it as a one-line
+              // item here the moment that data arrives.
             ],
           },
           {

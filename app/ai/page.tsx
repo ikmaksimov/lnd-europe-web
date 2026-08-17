@@ -25,6 +25,13 @@ export const metadata: Metadata = {
   description:
     'Embedded AI engineers, training, delivery and transformation — built on the practice behind LND Tech Europe’s own intelligence engine.',
   alternates: { canonical: '/ai' },
+  // Temporary, per TASK-legal-pages-resolve-markers.md: this page still
+  // carries live [TO CONFIRM]/[sign-off] markers naming commercial
+  // commitments and a price, so it must stay out of Google's index while it
+  // remains publicly linkable for client review. Delete this `robots` line
+  // (and restore the /ai entry in app/sitemap.ts) together, in the same
+  // future change that resolves those markers — neither edit is permanent.
+  robots: { index: false, follow: false },
 };
 
 /**

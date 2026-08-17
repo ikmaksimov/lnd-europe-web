@@ -5,9 +5,10 @@ import { Legal01 } from '@/blocks/legal/legal-01/legal-01';
 /**
  * Privacy Policy — GDPR Art. 13/14 notice. Content sourced from
  * TASKS/legal/02-privacy-policy.md — do not edit the wording here beyond what
- * is documented below; it is pending review by the client's lawyer. Where the
- * draft carries a `[TO CONFIRM — …]` marker, it is reproduced as-is, not
- * resolved.
+ * is documented below; it is pending review by the client's lawyer. The DPO,
+ * server-log retention, enquiry retention and processor-list markers were
+ * resolved per TASK-legal-pages-resolve-markers.md §2 — see that file for the
+ * exact wording decisions.
  *
  * Structural note: legal-01 renders each section's `paragraphs`, then
  * `items`, then `definitions`, then `tables`, in that fixed order. The source
@@ -29,14 +30,8 @@ import { Legal01 } from '@/blocks/legal/legal-01/legal-01';
  * - §5 "To exercise any of these, write to…" → "To exercise any of the
  *   rights listed below, write to…" ("these" had no antecedent left before
  *   it — the rights list now renders after this sentence, not before)
- *
- * `effectiveDate` is NOT the real publication date — see below.
  */
-const PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH = '2026-08-15';
-// ^ Placeholder only. These pages still carry `[TO CONFIRM]` markers pending
-// the client's gestoría (Registro Mercantil entry, DPO, retention periods,
-// processor list) — they are not ready to publish. Set this to the actual
-// publication date as the LAST step before deploy, not now.
+const EFFECTIVE_DATE = '2026-08-17';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -50,7 +45,7 @@ export default function PrivacyPolicyPage() {
     <main>
       <Legal01
         title="Privacy Policy"
-        effectiveDate={PROVISIONAL_EFFECTIVE_DATE_NOT_FOR_LAUNCH}
+        effectiveDate={EFFECTIVE_DATE}
         showTableOfContents
         intro={
           <>
@@ -87,7 +82,7 @@ export default function PrivacyPolicyPage() {
               {
                 term: 'Data Protection Officer',
                 description:
-                  "[TO CONFIRM — Data Protection Officer: we have not appointed one, as our processing does not require it under GDPR Art. 37. State this explicitly, or give the DPO's contact if one is appointed.]",
+                  'We have not appointed a Data Protection Officer, as our processing does not meet the criteria in Article 37 GDPR.',
               },
             ],
           },
@@ -126,7 +121,7 @@ export default function PrivacyPolicyPage() {
               {
                 term: 'Retention',
                 description:
-                  'Server and CDN logs, kept up to [TO CONFIRM — 30 days is a common default]',
+                  "Server and CDN logs, retained for up to 30 days in line with our hosting providers' policies",
               },
             ],
           },
@@ -197,7 +192,7 @@ export default function PrivacyPolicyPage() {
               {
                 term: 'Retention',
                 description:
-                  'For the duration of the exchange and afterwards for [TO CONFIRM — 2 years is a defensible default for business enquiries], unless a contract follows, in which case commercial and tax law retention periods apply',
+                  'For the duration of the exchange and for two years after the last contact, unless a contract follows, in which case commercial and tax law retention periods apply',
               },
             ],
           },
@@ -206,7 +201,6 @@ export default function PrivacyPolicyPage() {
             title: '3. Who your data is shared with',
             paragraphs: [
               'We do not sell personal data. We share it only with the providers listed in the table below, who process it on our behalf, under contract, and only as needed to run the site.',
-              '[TO CONFIRM — add any CRM or email tool that receives enquiries.]',
               'We may also disclose data where we are legally required to, for example to a public authority acting within its powers.',
             ],
             tables: [
