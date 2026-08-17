@@ -1,0 +1,27 @@
+{
+  "id": "faq-02",
+  "category": "faq",
+  "name": "FAQ — expandable list",
+  "description": "Two-tone display heading (muted lead + foreground) and spacious divider rows built on native <details>: each item has a description and an optional link, with an optional link below the list. Smooth expansion in pure CSS (::details-content + interpolate-size), no GSAP in the interaction.",
+  "bestFor": [
+    "questions and answers",
+    "service lists with details",
+    "resources and help"
+  ],
+  "contentSlots": {
+    "titleLead": "first part of the heading (muted, with a period)",
+    "title": "second part of the heading (foreground)",
+    "items": "4–6 items: title + description + link? {label, href}",
+    "footerLink": "link below the list, optional",
+    "defaultOpen": "indexes of pre-opened items (SSR open); default [] — all collapsed"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeIn",
+      "staggerChildren"
+    ]
+  },
+  "sourcePattern": "apple.com/business: services expandable list",
+  "status": "stable"
+}

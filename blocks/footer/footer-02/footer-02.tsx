@@ -32,9 +32,12 @@ export interface Footer02Props extends BlockBaseProps {
   links?: FooterLink[];
   featured?: FooterFeatured;
   copyright?: string;
-  legalLinks?: FooterLink[];
-  /** Studio credit in the legal strip. */
-  credit?: FooterLink;
+  /** Small-print links in the legal strip. Pass null to suppress the showcase
+   *  defaults; an empty array also renders no list. */
+  legalLinks?: FooterLink[] | null;
+  /** Studio credit in the legal strip. Pass null to suppress the showcase
+   *  default. */
+  credit?: FooterLink | null;
   /**
    * Decorate the navigation labels without editing this block (BLOCK-SPEC §16).
    *
@@ -203,7 +206,7 @@ export function Footer02({
         <div className="border-primary-foreground/15 mt-16 flex flex-col gap-4 border-t pt-8 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-primary-foreground/70 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
             <p>{copyright}</p>
-            {legalLinks.length > 0 ? (
+            {legalLinks && legalLinks.length > 0 ? (
               <ul className="flex flex-wrap gap-x-6 gap-y-2">
                 {legalLinks.map((link) => (
                   <li key={link.label}>

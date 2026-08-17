@@ -33,6 +33,13 @@ import {
   Tent,
   TrendUp,
 } from '@/components/icons';
+import {
+  BOOK_A_CALL,
+  FEATURED,
+  FOOTER_LINKS,
+  NAV_ITEMS,
+  SECONDARY_LINK,
+} from '@/components/nav-config';
 
 const SLOGAN = 'Light the path. Land the deal.';
 
@@ -46,56 +53,6 @@ const organizationLd: WithContext<Organization> = {
   description: siteConfig.description,
   slogan: SLOGAN,
 };
-
-/** The single booking action, shared by the header, the hero and the closing CTA. */
-const BOOK_A_CALL = {
-  label: 'Book a strategy call',
-  href: 'https://www.linkedin.com/company/lnd-tech-europe',
-};
-
-/**
- * Featured card — same content in the header mega menu and the footer. Points at
- * the LinkedIn launch post; the title is a line lifted from it. The share URL's
- * tracking parameters are stripped, leaving the canonical post link.
- */
-const FEATURED = {
-  label: 'Featured',
-  // The post's own artwork. It sits inside a link that already carries the
-  // title, so the image itself is decorative.
-  image: { src: '/featured-post.jpg', alt: '' },
-  title: 'The data behind most B2B strategies stays frozen in time.',
-  href: 'https://www.linkedin.com/posts/lnd-tech-europe_b2bgrowth-commercialintelligence-aiforbusiness-activity-7487485019423215616-FMoc',
-  linkLabel: 'Read on LinkedIn',
-};
-
-const NAV_ITEMS = [
-  { label: 'The engine', href: '#engine' },
-  { label: 'Solutions', href: '#solutions' },
-  { label: 'How we work', href: '#how-it-works' },
-  { label: 'Industries', href: '#industries' },
-  {
-    label: 'Company',
-    panel: {
-      groups: [
-        {
-          links: [
-            {
-              label: 'About',
-              description: 'The intelligence infrastructure behind European B2B growth.',
-              href: '#why',
-            },
-            {
-              label: 'How we work together',
-              description: 'From market intelligence to qualified pipeline.',
-              href: '#how-it-works',
-            },
-          ],
-        },
-      ],
-      featured: FEATURED,
-    },
-  },
-];
 
 // Parked with the block hero above — kept so restoring it is one uncomment.
 // const HERO_STATS = [
@@ -302,15 +259,6 @@ const INDUSTRIES = [
   },
 ];
 
-const FOOTER_LINKS = [
-  { label: 'About', href: '#why' },
-  { label: 'The engine', href: '#engine' },
-  { label: 'Solutions', href: '#solutions' },
-  { label: 'How we work', href: '#how-it-works' },
-  { label: 'Industries', href: '#industries' },
-  { label: 'Contact', href: '#contact' },
-];
-
 /**
  * Home page — Trencadís blocks carrying the client's copy. One <h1> (the hero);
  * h2/h3 below it without gaps. Section anchors live on wrapper divs so the blocks
@@ -337,7 +285,7 @@ export default function Home() {
           ),
         }}
         items={NAV_ITEMS}
-        secondaryLink={{ label: 'Contact', href: '#contact' }}
+        secondaryLink={SECONDARY_LINK}
         cta={BOOK_A_CALL}
       />
       <main>
@@ -400,6 +348,12 @@ export default function Home() {
             title="Get started with LND Tech Europe."
             subtitle="Tell us your market and your goals — we'll show you the European companies that matter most and how we will reach them."
             primaryCta={BOOK_A_CALL}
+            // The block's footnote slot always rendered a stray `*` → `#terms`
+            // by default until the library shipped a real `null` option for it
+            // (the same always-rendered-slot flaw as footer-02's `legalLinks`
+            // and `credit`). Neither page has a footnote, so it is suppressed
+            // outright rather than pointed somewhere.
+            footnote={null}
           />
         </div>
       </main>
@@ -417,9 +371,10 @@ export default function Home() {
           { label: 'Cookies', href: '/cookies' },
           { label: 'Terms', href: '/terms' },
         ]}
-        // The block always renders this slot — omitting the prop restores its
-        // "Made by DigitalForms" default — so it carries the company's own link
-        // instead. A truly empty slot needs `credit?: FooterLink | null` upstream.
+        // Omitting the prop would restore the block's "Made by DigitalForms"
+        // default, so it carries the company's own link instead. (The library
+        // now also accepts `credit={null}` to suppress the slot outright, but
+        // this page has a real credit link, so that option is not used here.)
         credit={{
           label: 'LND Tech Europe on LinkedIn',
           href: 'https://www.linkedin.com/company/lnd-tech-europe',

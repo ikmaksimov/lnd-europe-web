@@ -1,0 +1,25 @@
+{
+  "id": "faq-01",
+  "category": "faq",
+  "name": "FAQ — native details accordion",
+  "description": "Accordion built on native <details>/<summary>: expands without JS, the chevron rotates via the CSS open state. Enters with a stagger. Data is ready for FAQPage JSON-LD.",
+  "bestFor": [
+    "frequently asked questions",
+    "objection handling",
+    "support"
+  ],
+  "contentSlots": {
+    "eyebrow": "overline label, optional",
+    "heading": "section heading",
+    "items": "4–6 question + answer pairs"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeUp",
+      "staggerChildren"
+    ]
+  },
+  "sourcePattern": "flowbite: FAQ accordion",
+  "status": "stable"
+}

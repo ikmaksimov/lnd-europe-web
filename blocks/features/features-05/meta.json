@@ -1,0 +1,26 @@
+{
+  "id": "features-05",
+  "category": "features",
+  "name": "Features — top-aligned capabilities",
+  "description": "Left-aligned heading above a 3×2 capability grid. Strong icon tiles, titles and descriptions follow a fixed top rhythm in equal-height desktop cards; cards return to natural height in one column.",
+  "bestFor": [
+    "product capabilities",
+    "service systems",
+    "operational benefits"
+  ],
+  "contentSlots": {
+    "eyebrow": "overline label, optional",
+    "heading": "left-aligned section heading",
+    "subheading": "one sentence below the heading, optional",
+    "items": "6 capabilities: icon (overridable) + title + description"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeUp",
+      "staggerChildren"
+    ]
+  },
+  "sourcePattern": "Sui: top-aligned capability cards",
+  "status": "stable"
+}

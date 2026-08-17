@@ -4,19 +4,23 @@
   "library": {
     "name": "trencadis",
     "version": "0.1.0",
-    "commit": "9a31dc48c9-dirty"
+    "commit": "0d3931a72d"
   },
   "installedAt": "2026-07-27T13:35:27.744Z",
-  "updatedAt": "2026-08-15T00:05:53.485Z",
+  "updatedAt": "2026-08-15T12:54:54.415Z",
   "blocks": {
     "cta-02": {
       "category": "cta",
-      "provenance": "unknown",
-      "from": null,
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "0d3931a72d"
+      },
       "files": {
-        "blocks/cta/cta-02/cta-02.edit.ts": "sha256:ea0443c8e4f9edf1",
-        "blocks/cta/cta-02/cta-02.tsx": "sha256:7beba57c2d419297",
-        "blocks/cta/cta-02/meta.json": "sha256:0e8d140bf85e48ff"
+        "blocks/cta/cta-02/cta-02.edit.ts": "sha256:6c05e6e297b02987",
+        "blocks/cta/cta-02/cta-02.tsx": "sha256:e135de85c7874a54",
+        "blocks/cta/cta-02/meta.json": "sha256:a1c5e2e9be0d3e78"
       }
     },
     "features-03": {
@@ -34,11 +38,11 @@
       "from": {
         "name": "trencadis",
         "version": "0.1.0",
-        "commit": "b70f3490c1"
+        "commit": "0d3931a72d"
       },
       "files": {
-        "blocks/footer/footer-02/footer-02.tsx": "sha256:5fd8086c2dc15d37",
-        "blocks/footer/footer-02/meta.json": "sha256:2dedbfe6c2c495ce"
+        "blocks/footer/footer-02/footer-02.tsx": "sha256:59577ad76509d1c7",
+        "blocks/footer/footer-02/meta.json": "sha256:84d355cc6e7ba76f"
       }
     },
     "hero-02": {
@@ -117,7 +121,7 @@
       "from": {
         "name": "trencadis",
         "version": "0.1.0",
-        "commit": "9a31dc48c9-dirty"
+        "commit": "0d3931a72d"
       },
       "files": {
         "blocks/features/features-06/features-06.edit.ts": "sha256:34491a32175f401e",
@@ -131,11 +135,11 @@
       "from": {
         "name": "trencadis",
         "version": "0.1.0",
-        "commit": "45906af22d"
+        "commit": "0d3931a72d"
       },
       "files": {
-        "blocks/legal/legal-01/legal-01.tsx": "sha256:5b49f34c99ada251",
-        "blocks/legal/legal-01/meta.json": "sha256:ef91e53088042b0b"
+        "blocks/legal/legal-01/legal-01.tsx": "sha256:ef70d220128a2382",
+        "blocks/legal/legal-01/meta.json": "sha256:da0bf66ac7da0846"
       }
     },
     "cookies-01": {
@@ -151,6 +155,75 @@
         "blocks/cookies/cookies-01/cookies-01.storage.ts": "sha256:892340b6b379dd9b",
         "blocks/cookies/cookies-01/cookies-01.tsx": "sha256:cd36284c4732d777",
         "blocks/cookies/cookies-01/meta.json": "sha256:8b207b83c84bca25"
+      }
+    },
+    "cta-03": {
+      "category": "cta",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "0d3931a72d"
+      },
+      "files": {
+        "blocks/cta/cta-03/cta-03.tsx": "sha256:b07164049a12717c",
+        "blocks/cta/cta-03/meta.json": "sha256:a617129f6921bb62"
+      }
+    },
+    "faq-02": {
+      "category": "faq",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "0d3931a72d"
+      },
+      "files": {
+        "blocks/faq/faq-02/faq-02.tsx": "sha256:3191792d9cb1e0f1",
+        "blocks/faq/faq-02/meta.json": "sha256:28202b1b644826e1"
+      }
+    },
+    "features-12": {
+      "category": "features",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "0d3931a72d"
+      },
+      "files": {
+        "blocks/features/features-12/features-12.edit.ts": "sha256:43bc4e8a3bfb16b6",
+        "blocks/features/features-12/features-12.tsx": "sha256:5de96a63d6941b93",
+        "blocks/features/features-12/meta.json": "sha256:a8962cb8f93f1dec"
+      }
+    },
+    "features-05": {
+      "category": "features",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "0d3931a72d"
+      },
+      "files": {
+        "blocks/features/features-05/features-05.edit.ts": "sha256:1b6b452f5153148b",
+        "blocks/features/features-05/features-05.tsx": "sha256:c6a3f1165f4e30a1",
+        "blocks/features/features-05/meta.json": "sha256:373de69c2da93c51"
+      }
+    },
+    "faq-01": {
+      "category": "faq",
+      "provenance": "copied",
+      "from": {
+        "name": "trencadis",
+        "version": "0.1.0",
+        "commit": "0d3931a72d"
+      },
+      "files": {
+        "blocks/faq/faq-01/faq-01.edit.ts": "sha256:b927016c6ddaa910",
+        "blocks/faq/faq-01/faq-01.tsx": "sha256:750d34c26f2a3bb2",
+        "blocks/faq/faq-01/faq-data.ts": "sha256:3fdd8935d34f408f",
+        "blocks/faq/faq-01/meta.json": "sha256:13ad5fbe463ee8d0"
       }
     }
   },
@@ -218,7 +291,7 @@
     "from": {
       "name": "trencadis",
       "version": "0.1.0",
-      "commit": "9a31dc48c9-dirty"
+      "commit": "0d3931a72d"
     },
     "hash": "sha256:4bef830f07c7c28a",
     "themeImport": "../themes/neutral.css"

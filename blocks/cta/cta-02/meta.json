@@ -2,7 +2,7 @@
   "id": "cta-02",
   "category": "cta",
   "name": "CTA — centered spotlight",
-  "description": "Centered composition on a mesh gradient built from tint tokens: icon badge → large two-line heading → subtitle with a footnote → a single pill button. Soft entrance (fadeIn), optional full-height mode. Opens or closes a page.",
+  "description": "Centered composition on a mesh gradient built from tint tokens: icon badge → large two-line heading → subtitle with a footnote → one configurable action. Soft entrance (fadeIn), optional full-height mode. Opens or closes a page.",
   "bestFor": [
     "product first screens",
     "final calls to action",
@@ -12,8 +12,8 @@
     "icon": "icon badge above the heading (overridable)",
     "title": "large heading, 2 lines (text-balance)",
     "subtitle": "one sentence below the heading, optional",
-    "footnote": "footnote link (marker + href), rendered as sup",
-    "primaryCta": "single pill button"
+    "footnote": "optional footnote link (marker + href), rendered as sup; pass null in code to suppress the showcase default",
+    "primaryCta": "single action button"
   },
   "animation": {
     "level": "subtle",

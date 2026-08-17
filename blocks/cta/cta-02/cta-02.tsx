@@ -10,16 +10,23 @@ import { BrandMark } from '@/lib/icons';
 interface Cta {
   label: string;
   href: string;
+  /** Decorative leading icon; code-level only, never PageDoc content. */
+  icon?: ReactNode;
 }
+
+type ActionCorners = 'default' | 'sharp';
 
 export interface Cta02Props extends BlockBaseProps {
   /** Badge above the title (defaults to the inline tile mark). */
   icon?: ReactNode;
   title?: string;
   subtitle?: string;
-  /** Superscript reference rendered after the subtitle, e.g. terms link. */
-  footnote?: { marker: string; href: string };
+  /** Superscript reference rendered after the subtitle, e.g. terms link. Pass
+   *  null to suppress the showcase default. */
+  footnote?: { marker: string; href: string } | null;
   primaryCta?: Cta;
+  /** Applies the corner treatment to the primary CTA only. */
+  actionCorners?: ActionCorners;
   /** Hero of a client page can open as h1; h2 elsewhere. */
   headingLevel?: 'h1' | 'h2';
   /** 'gradient' = CSS mesh built from tint tokens; 'plain' = flat surface. */
@@ -40,6 +47,7 @@ export const defaults = {
     'Tell us about your villa and how you use it — we will send a tailored care plan within a day.',
   footnote: { marker: '*', href: '#terms' },
   primaryCta: { label: 'Request a visit', href: '#contact' },
+  actionCorners: 'default',
   background: 'gradient',
   fullHeight: false,
 } as const;
@@ -55,6 +63,7 @@ export function Cta02({
   subtitle = defaults.subtitle,
   footnote = defaults.footnote,
   primaryCta = defaults.primaryCta,
+  actionCorners = defaults.actionCorners,
   headingLevel = 'h2',
   background = defaults.background,
   fullHeight = defaults.fullHeight,
@@ -68,6 +77,16 @@ export function Cta02({
   const autoId = useId();
   const titleId = `${htmlId ?? autoId}-title`;
   const Heading = headingLevel;
+  const primaryCtaContent = primaryCta.icon ? (
+    <>
+      <span aria-hidden="true" className="shrink-0">
+        {primaryCta.icon}
+      </span>
+      <span>{primaryCta.label}</span>
+    </>
+  ) : (
+    primaryCta.label
+  );
 
   useBlockAnimation(animationLevel, scope, (level) => {
     const root = scope.current;
@@ -130,9 +149,16 @@ export function Cta02({
         <div data-cta2-cta className="mt-8">
           <Link
             href={primaryCta.href}
-            className="border-border bg-background text-foreground hover:bg-accent inline-flex items-center justify-center rounded-full border px-7 py-3 text-base font-medium shadow-sm transition-colors"
+            className={[
+              'border-border bg-background text-foreground hover:bg-accent inline-flex items-center justify-center',
+              actionCorners === 'sharp' ? 'rounded-none' : 'rounded-full',
+              primaryCta.icon ? 'gap-2' : null,
+              'border px-7 py-3 text-base font-medium shadow-sm transition-colors',
+            ]
+              .filter(Boolean)
+              .join(' ')}
           >
-            {primaryCta.label}
+            {primaryCtaContent}
           </Link>
         </div>
       </div>

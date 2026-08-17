@@ -8,6 +8,17 @@ export interface LegalTable {
   rows: readonly (readonly ReactNode[])[];
 }
 
+export interface LegalDefinition {
+  term: ReactNode;
+  description: ReactNode;
+}
+
+export type LegalSectionPart =
+  | { kind: 'paragraph'; content: ReactNode }
+  | { kind: 'list'; items: readonly ReactNode[] }
+  | { kind: 'definitions'; entries: readonly LegalDefinition[] }
+  | { kind: 'table'; table: LegalTable };
+
 export interface LegalSection {
   /** Public fragment id, e.g. `retention` → `/privacy#retention`. */
   id: string;
@@ -15,8 +26,11 @@ export interface LegalSection {
   tocLabel?: string;
   paragraphs?: readonly ReactNode[];
   items?: readonly ReactNode[];
-  definitions?: readonly { term: ReactNode; description: ReactNode }[];
+  definitions?: readonly LegalDefinition[];
   tables?: readonly LegalTable[];
+  /** Ordered content mode. Presence takes precedence over every convenience
+   *  field, including when this array is empty. */
+  parts?: readonly LegalSectionPart[];
 }
 
 export interface Legal01Props extends BlockBaseProps {
@@ -114,56 +128,133 @@ export function Legal01({
                 {section.title}
               </h2>
 
-              {section.paragraphs?.length ? (
-                <div className="mt-5 space-y-5">
-                  {section.paragraphs.map((paragraph, paragraphIndex) => (
-                    <p
-                      key={paragraphIndex}
-                      className="text-foreground text-base leading-7 [overflow-wrap:anywhere]"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              ) : null}
-
-              {section.items?.length ? (
-                <ul className="marker:text-muted mt-5 list-disc space-y-2 pl-6 text-base leading-7">
-                  {section.items.map((item, itemIndex) => (
-                    <li key={itemIndex} className="pl-1 [overflow-wrap:anywhere]">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-
-              {section.definitions?.length ? (
-                <dl className="mt-6 grid sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)]">
-                  {section.definitions.map((definition, definitionIndex) => (
-                    <Definition
-                      key={definitionIndex}
-                      term={definition.term}
-                      description={definition.description}
-                    />
-                  ))}
-                </dl>
-              ) : null}
-
-              {section.tables?.map((table, tableIndex) => (
-                <LegalDataTable
-                  key={tableIndex}
-                  table={table}
+              {section.parts !== undefined ? (
+                <OrderedSectionParts
+                  parts={section.parts}
                   sectionIndex={sectionIndex}
-                  tableIndex={tableIndex}
                   baseId={baseId}
                 />
-              ))}
+              ) : (
+                <>
+                  {section.paragraphs?.length ? (
+                    <div className="mt-5 space-y-5">
+                      {section.paragraphs.map((paragraph, paragraphIndex) => (
+                        <p
+                          key={paragraphIndex}
+                          className="text-foreground text-base leading-7 [overflow-wrap:anywhere]"
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {section.items?.length ? (
+                    <ul className="marker:text-muted mt-5 list-disc space-y-2 pl-6 text-base leading-7">
+                      {section.items.map((item, itemIndex) => (
+                        <li key={itemIndex} className="pl-1 [overflow-wrap:anywhere]">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+
+                  {section.definitions?.length ? (
+                    <dl className="mt-6 grid sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)]">
+                      {section.definitions.map((definition, definitionIndex) => (
+                        <Definition
+                          key={definitionIndex}
+                          term={definition.term}
+                          description={definition.description}
+                        />
+                      ))}
+                    </dl>
+                  ) : null}
+
+                  {section.tables?.map((table, tableIndex) => (
+                    <LegalDataTable
+                      key={tableIndex}
+                      table={table}
+                      sectionIndex={sectionIndex}
+                      tableIndex={tableIndex}
+                      baseId={baseId}
+                    />
+                  ))}
+                </>
+              )}
             </section>
           ))}
         </div>
       </div>
     </article>
   );
+}
+
+function OrderedSectionParts({
+  parts,
+  sectionIndex,
+  baseId,
+}: {
+  parts: readonly LegalSectionPart[];
+  sectionIndex: number;
+  baseId: string;
+}) {
+  let tableIndex = 0;
+
+  return parts.map((part, partIndex) => {
+    switch (part.kind) {
+      case 'paragraph':
+        return (
+          <p
+            key={partIndex}
+            className="text-foreground mt-5 text-base leading-7 [overflow-wrap:anywhere]"
+          >
+            {part.content}
+          </p>
+        );
+      case 'list':
+        return part.items.length ? (
+          <ul
+            key={partIndex}
+            className="marker:text-muted mt-5 list-disc space-y-2 pl-6 text-base leading-7"
+          >
+            {part.items.map((item, itemIndex) => (
+              <li key={itemIndex} className="pl-1 [overflow-wrap:anywhere]">
+                {item}
+              </li>
+            ))}
+          </ul>
+        ) : null;
+      case 'definitions':
+        return part.entries.length ? (
+          <dl
+            key={partIndex}
+            className="mt-6 grid sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)]"
+          >
+            {part.entries.map((definition, definitionIndex) => (
+              <Definition
+                key={definitionIndex}
+                term={definition.term}
+                description={definition.description}
+              />
+            ))}
+          </dl>
+        ) : null;
+      case 'table': {
+        const currentTableIndex = tableIndex;
+        tableIndex += 1;
+        return (
+          <LegalDataTable
+            key={partIndex}
+            table={part.table}
+            sectionIndex={sectionIndex}
+            tableIndex={currentTableIndex}
+            baseId={baseId}
+          />
+        );
+      }
+    }
+  });
 }
 
 function Definition({ term, description }: { term: ReactNode; description: ReactNode }) {

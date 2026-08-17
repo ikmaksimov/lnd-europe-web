@@ -1,0 +1,15 @@
+{
+  "id": "features-12",
+  "category": "features",
+  "name": "Features — editorial titled points",
+  "description": "A quiet editorial split with a large heading, lead paragraph and two titled points; optional code-level icons support a marked variation.",
+  "bestFor": ["service principles", "editorial introductions", "product value"],
+  "contentSlots": {
+    "heading": "large left-column section heading",
+    "lead": "right-column opening paragraph, optional",
+    "points": "two titled points: optional mark + title + description"
+  },
+  "animation": { "level": "subtle", "presets": ["fadeIn", "staggerChildren"] },
+  "sourcePattern": "Relume Layouts 48 and 54: editorial split with titled points",
+  "status": "stable"
+}

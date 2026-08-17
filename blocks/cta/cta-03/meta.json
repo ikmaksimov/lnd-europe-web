@@ -1,0 +1,26 @@
+{
+  "id": "cta-03",
+  "category": "cta",
+  "name": "CTA — inverted duo",
+  "description": "Inverted dark section: centered two-line heading plus two actions in a row (stacked on mobile). Minimalist — no subtitle. Enters with a fadeIn cascade.",
+  "bestFor": [
+    "decisive calls to action",
+    "two equal goals",
+    "page endings"
+  ],
+  "contentSlots": {
+    "title": "heading, 2 lines (text-balance)",
+    "primaryCta": "primary button",
+    "secondaryCta": "secondary button, optional",
+    "fullHeight": "true → section fills the full viewport height"
+  },
+  "animation": {
+    "level": "subtle",
+    "presets": [
+      "fadeIn",
+      "textReveal"
+    ]
+  },
+  "sourcePattern": "vercel.com-style: dark duo CTA",
+  "status": "stable"
+}
